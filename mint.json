@@ -18,14 +18,23 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@dendrite.se"
+      "url": "https://discord.gg/ETPBdXU3kx"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
     "url": "https://dendrite.se/app"
   },
-  "tabs": [],
+  "tabs": [
+    {
+      "name": "Docs",
+      "url": "/"
+    },
+    {
+      "name": "SDK reference",
+      "url": "sdk-reference"
+    }
+  ],
   "anchors": [
     {
       "name": "Github repo",
@@ -44,10 +53,6 @@
       "pages": ["introduction", "getting-started", "authentication"]
     },
     {
-      "group": "Classes",
-      "pages": ["classes/browser", "classes/page", "classes/locator"]
-    },
-    {
       "group": "Tutorials",
       "pages": [
         "tutorials/overview",
@@ -62,11 +67,19 @@
         "quickstarts/gmail",
         "quickstarts/ticktick"
       ]
+    },
+    {
+      "group": "Python SDK",
+      "pages": [
+        "sdk-reference/python/browser",
+        "sdk-reference/python/page",
+        "sdk-reference/python/locator"
+      ]
     }
   ],
   "footerSocials": {
     "x": "https://x.com/dendrite_labs",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "github": "https://github.com/",
+    "linkedin": "https://www.linkedin.com/company/dendrite-agent/"
   }
 }

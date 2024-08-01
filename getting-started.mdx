@@ -32,7 +32,10 @@ import asyncio
 
 async def main():
     # Initiate browser with your own OpenAI API key
-    dendrite_browser = DendriteBrowser(openai_api_key=...)
+    dendrite_browser = DendriteBrowser(
+      dendrite_api_key=...
+      openai_api_key=...
+    )
 
     page = await dendrite_browser.goto("https://google.com")
 
