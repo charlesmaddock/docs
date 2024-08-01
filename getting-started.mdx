@@ -1,0 +1,57 @@
+---
+title: "Getting started"
+description: "Start building awesome web interactions in 5 minutes"
+icon: "rocket"
+---
+
+import { BetaNote } from "/snippets/beta-note.mdx";
+
+<BetaNote />
+
+## Get your API key
+
+First, let's get your Dendrite API key from the [dashboard](https://dendrite.se/app).
+
+## Installation
+
+```
+pip install dendrite-python-sdk && playwright install
+```
+
+## Simple example
+
+Here is a very simple example of how to use Dendrite. In the example we go to google.com, close the cookie popup, find the search bar and enter 'hello world' into it.
+
+```
+pip install asyncio
+```
+
+```python main.py
+from dendrite_server import DendriteBrowser
+import asyncio
+
+async def main():
+    # Initiate browser with your own OpenAI API key
+    dendrite_browser = DendriteBrowser(openai_api_key=...)
+
+    page = await dendrite_browser.goto("https://google.com")
+
+    # Close cookie popup
+    close_cookies = await page.get_interactable_element("reject cookies popup button")
+    await close_cookies.click(expected_outcome="That the cookies popup closed.")
+
+    # Find search bar
+    search_bar = await page.get_interactable_element("Return the search bar")
+    await search_bar.fill("hello world")
+
+    await dendrite_browser.close()
+
+
+asyncio.run(main())
+```
+
+## Sign in to any website
+
+<Card title="Authentication" icon="lock" href="/authentication">
+  Let your Agent sign in and perform actions on your behalf
+</Card>

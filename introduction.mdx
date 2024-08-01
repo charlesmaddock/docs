@@ -1,71 +1,36 @@
 ---
 title: Introduction
-description: 'Welcome to the home of your new documentation'
+description: "What is Dendrite?"
+icon: "house"
 ---
 
-<img
-  className="block dark:hidden"
-  src="/images/hero-light.svg"
-  alt="Hero Light"
-/>
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.svg"
-  alt="Hero Dark"
-/>
+import { BetaNote } from "/snippets/beta-note.mdx";
 
-## Setting up
+<BetaNote />
 
-The first step to world-class documentation is setting up your editing environments.
+Dendrite enables easy web interactions and scraping for AI agents utilizing natural language and self-healing scripts. Leverage our tools to power you agents, enabling them to perform actions on websites on your behalf, including those requiring authentication.
 
-<CardGroup cols={2}>
-  <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
-  >
-    Get your docs set up locally for easy development
+<CardGroup>
+  <Card title="Quickstart" icon="book" href="/getting-started">
+    This simple tutorial will help you get started with web actions in no time.
   </Card>
   <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
+    title="Playground"
+    icon="square-terminal"
+    href="https://dendrite.se/app"
   >
-    Preview your changes before you push to make sure they're perfect
+    Discover and experiment with our prompt tool right in your browser.
   </Card>
 </CardGroup>
 
-## Make it yours
+## Browser library
 
-Update your docs to your brand and add valuable content for the best user conversion.
+The Dendrite library is an abstraction on top of [Playwright](https://playwright.dev/python/docs/intro). You can do everything you would normally do with Playwright but with additional functionality made for AI Agent development.
 
-<CardGroup cols={2}>
-  <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
-  >
-    Customize your docs to your company's colors and brands
-  </Card>
-  <Card
-    title="Reference APIs"
-    icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
-  >
-    Automatically generate endpoints from an OpenAPI spec
-  </Card>
-  <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/components/accordion"
-  >
-    Build interactive features and designs to guide your users
-  </Card>
-  <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
-  >
-    Check out our showcase of our favorite documentation
-  </Card>
-</CardGroup>
+## AI functionality
+
+Use natural language to find an element on the page or scrape information in a structured format. Scripts will be generated on the fly using Large Multimodal Models and will be cached for quick and affordable future use. If a script breaks due to a change in the DOM, it will regenerate automatically and cache the modified script.
+
+## Authentication
+
+You can simulate an authenticated user session on any website by using our chrome extension **Dendrite Vault**. This allows your AI Agent to use a web service on your behalf without being dependent on an API. Read more about authentication [here](/authentication).

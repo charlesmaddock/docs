@@ -1,85 +1,66 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "Dendrite Docs",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#805AD5",
+    "light": "#D6BCFA",
+    "dark": "#805AD5",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#805AD5",
+      "to": "#D6BCFA"
     }
   },
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "mailto:hi@dendrite.se"
     }
   ],
   "topbarCtaButton": {
     "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "url": "https://dendrite.se/app"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
+  "tabs": [],
   "anchors": [
     {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "name": "Github repo",
+      "icon": "github",
+      "url": "https://github.com"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "name": "Chat with us!",
+      "icon": "discord",
+      "url": "https://discord.gg/ETPBdXU3kx"
     }
   ],
   "navigation": [
     {
-      "group": "Get Started",
+      "group": "",
+      "pages": ["introduction", "getting-started", "authentication"]
+    },
+    {
+      "group": "Classes",
+      "pages": ["classes/browser", "classes/page", "classes/locator"]
+    },
+    {
+      "group": "Tutorials",
       "pages": [
-        "introduction",
-        "quickstart",
-        "development"
+        "tutorials/overview",
+        "tutorials/concepts",
+        "tutorials/langchain-agent"
       ]
     },
     {
-      "group": "Essentials",
+      "group": "Quickstarts",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
-    },
-    {
-      "group": "API Documentation",
-      "pages": [
-        "api-reference/introduction"
-      ]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "quickstarts/instagram",
+        "quickstarts/gmail",
+        "quickstarts/ticktick"
       ]
     }
   ],
