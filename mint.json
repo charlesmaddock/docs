@@ -29,20 +29,16 @@
     {
       "name": "Docs",
       "url": "/"
-    },
-    {
-      "name": "SDK reference",
-      "url": "sdk-reference"
     }
   ],
   "anchors": [
     {
-      "name": "Github repo",
+      "name": "Github",
       "icon": "github",
       "url": "https://github.com"
     },
     {
-      "name": "Chat with us!",
+      "name": "Community",
       "icon": "discord",
       "url": "https://discord.gg/ETPBdXU3kx"
     }
