@@ -8,7 +8,7 @@ import { BetaNote } from "/snippets/beta-note.mdx";
 
 <BetaNote />
 
-Dendrite is a tool that makes it easy to create web integrations for AI agents. With Dendrite your can easily:
+Dendrite is a tool that makes it easy to create web integrations for AI agents. With Dendrite your can:
 
 * Authenticate on websites
 * Interact with elements
@@ -16,29 +16,17 @@ Dendrite is a tool that makes it easy to create web integrations for AI agents. 
 * Download and upload files
 * Fill forms
 
-Say that you want to create an AI agent that can log into your bank and download your transactions, so that it can analyze your cashflow – that web automation is possible to create with Dendrite!
+Let's imagine that you want to create an AI agent that can get your bank's transactions and analyze your cashflow – a web automation like this would be easy to create with Dendrite!
 
 <CardGroup>
   <Card title="Quickstart" icon="book" href="/getting-started">
-    This simple tutorial will help you get started with web integrations in no time.
+    Build your first web action in five minutes.
   </Card>
   <Card
-    title="Playground"
-    icon="square-terminal"
-    href="https://dendrite.se/app"
+    title="Banking Agent Example"
+    icon="building-columns"
+    href="examples/banking-agent"
   >
-    Discover and experiment with our prompt tool right in your browser.
+    Example of an agent using Dendrite to log in to a bank and fetching all transactions.
   </Card>
 </CardGroup>
-
-## Browser library
-
-The Dendrite library is an abstraction on top of [Playwright](https://playwright.dev/python/docs/intro). You can do everything you would normally do with Playwright but with additional functionality made for AI Agent development.
-
-## AI functionality
-
-Use natural language to find an element on the page or scrape information in a structured format. Scripts will be generated on the fly using Large Multimodal Models and will be cached for quick and affordable future use. If a script breaks due to a change in the DOM, it will self-heal automatically and cache the new modified script.
-
-## Authentication
-
-You can simulate an authenticated user session on any website by using our chrome extension **Dendrite Vault**. This allows your AI Agent to use a web service on your behalf without being dependent on an API. Read more about authentication [here](/authentication).

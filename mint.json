@@ -46,31 +46,19 @@
   "navigation": [
     {
       "group": "",
-      "pages": ["introduction", "getting-started", "authentication"]
+      "pages": ["introduction", "getting-started"]
     },
     {
-      "group": "Tutorials",
+      "group": "Examples",
       "pages": [
-        "tutorials/overview",
-        "tutorials/concepts",
-        "tutorials/langchain-agent"
+        "examples/google-search",
+        "examples/authentication-instagram",
+        "examples/remote-browser"
       ]
     },
     {
-      "group": "Quickstarts",
-      "pages": [
-        "quickstarts/instagram",
-        "quickstarts/gmail",
-        "quickstarts/ticktick"
-      ]
-    },
-    {
-      "group": "Python SDK",
-      "pages": [
-        "sdk-reference/python/browser",
-        "sdk-reference/python/page",
-        "sdk-reference/python/locator"
-      ]
+      "group": "Agent Examples",
+      "pages": ["agents/banking-agent"]
     }
   ],
   "footerSocials": {

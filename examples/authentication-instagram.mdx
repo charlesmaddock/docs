@@ -1,0 +1,115 @@
+---
+title: Authentication
+description: "How to authenticate on any website using Dendrite"
+icon: "lock"
+---
+
+import { BetaNote } from "/snippets/beta-note.mdx";
+
+<BetaNote />
+
+With our Chrome extension, **Dendrite Vault**, you can safely collect user sessions from your browser and simulate an authenticated session in the Dendrite Browser.
+
+<Steps>
+  <Step title="Download the extension">
+    First, add Dendrite Vault to your browser. On install, you will be prompted to authenticate
+    with your personal Dendrite account. See the steps below.
+  </Step>
+  <Step title="Save auth session">
+    Go to any website where you're currently authenticated. Click on the
+    extension icon and press **Save authentication session**
+  </Step>
+  <Step title="Authenticate">
+    Once your session has been saved, you can add it to your browser context
+    with:
+
+    ```python
+    browser.authenticate("domain.com")
+    ```
+
+  </Step>
+</Steps>
+
+The extension isn't available on the Chrome Web Store right now, but here is how you can use it anyways:
+
+## Install Extension
+
+Download the Dendrite Vault build here:
+
+https://github.com/dendrite-agent/dendrite-vault
+
+You can download it as a zip file by pressing the green 'code' button.
+
+## Activate Extension
+
+Once you have downloaded the build you need to load it as an extension. Do this by going to 'chrome://extensions', you should see this:
+
+![Extension Dashboard](/images/auth1.png)
+
+
+Activate Developer Mode in the top right corner:
+
+![Activate Developer Mode](/images/auth2.png)
+
+
+Press 'unload packed':
+
+![Unload Packed](/images/auth3.png)
+
+
+Select the build file called `chrome-mv3-dev`:
+
+![Select File](/images/auth4.png)
+
+
+The extension should be available as an extension in your browser. You might need to activate it inside 'chrome://extensions'. 
+
+If you press the extensions button next to the search bar in your browser, you can open Dendrite Vault and start authenticating sessions for your agent by simply pressing the "Save Authentication Session" button, given that you are logged in to the service you want your agent to have access to:
+
+You'll need to log in to your Dendrite account first before your can start authenticating.
+
+![Use plugin](/images/auth-use-plugin.png)
+
+## Authenticating on Instagram
+
+To log in to instagram with your agent your need to:
+
+<Steps>
+  <Step title="Install Dendrite Vault">
+    Install the Dendrite Vault extension in your browser.
+  </Step>
+  <Step title="Log in to Instagram">
+    Log in to Instagram with your account in your own browser.
+  </Step>
+  <Step title="Save your session">
+    Open the Dendrite Vault extension and save your session on Instagram in your browser.
+  </Step>
+  <Step title="Use the authenticate function">
+    Use the `authenticate` function in a script, like in the example below:
+  </Step>
+</Steps>
+
+```python auth_example.py
+import asyncio
+from dendrite_python_sdk import DendriteBrowser
+
+
+async def authenticate_on_instagram():
+    dendrite_browser = DendriteBrowser()
+    await dendrite_browser.authenticate("instagram.com")
+    page = await dendrite_browser.goto(
+        "https://instagram.com",
+        expected_page="You should be logged in with the instagram feed visible",
+    )
+    res = await page.ask("Describe the first post in my feed")
+    print("First post description: ", res.return_data)
+
+
+asyncio.run(authenticate_on_instagram())
+```
+
+## Let's scale up
+
+<Card title="Remote Browser" icon="arrow-trend-up" href="/examples/remote-browser">
+  Use a remote browser to run web automations in the cloud
+</Card>
