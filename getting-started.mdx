@@ -25,9 +25,16 @@ BROWSERBASE_API_KEY=[only required for DendriteRemoteBrowser when scaling up]
 
 Install the Dendrite SDK. We also need to run `playwright install` to install the browser drivers.
 
+With pip:
 ```
 pip install dendrite-python-sdk && playwright install 
 ```
+
+With poetry:
+```
+poetry add dendrite-python-sdk && poetry run playwright install 
+```
+
 
 ## Hello world
 
