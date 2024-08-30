@@ -53,12 +53,13 @@
       "pages": [
         "examples/google-search",
         "examples/authentication-instagram",
-        "examples/remote-browser"
+        "examples/remote-browser",
+        "examples/outlook"
       ]
     },
     {
       "group": "Agent Examples",
-      "pages": ["agents/banking-agent"]
+      "pages": ["agents/cooking-agent", "agents/banking-agent"]
     }
   ],
   "footerSocials": {

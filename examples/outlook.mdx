@@ -1,0 +1,191 @@
+---
+title: Automated Outlook Replies
+description: "A Dendrite automation that logs into Outlook, filters unread emails, and automatically replies to them"
+icon: "envelope"
+---
+
+## Overview
+
+The automation performs the following steps:
+1. Logs into Outlook
+2. Filters for unread emails
+3. Captures screenshots of email threads
+4. Analyzes email content using Claude AI
+5. Generates and sends appropriate responses
+
+
+## Implementation
+
+```python
+import asyncio
+import os
+from typing import Tuple
+
+import anthropic
+from anthropic.types import Message, ToolUseBlock
+from dendrite_python_sdk import DendriteBrowser, DendritePage
+
+# Mock function to simulate a knowledge base query
+def get_product_knowledge():
+    return """
+    Dendrite Toothpaste costs $440.
+    Dendrite only sells online, with no physical stores.
+    Dendrite does not offer refunds on toothpaste purchases.
+    Warning: Dendrite toothpaste can explode if left in direct sunlight for extended periods.
+    """
+
+async def analyze_and_draft_reply(screenshots: list) -> Tuple[bool, str]:
+    """
+    Analyzes email screenshots using Claude AI and drafts a response if appropriate.
+    
+    Args:
+        screenshots (list): List of base64-encoded screenshots of email messages.
+    
+    Returns:
+        Tuple[bool, str]: A boolean indicating whether to reply, and the drafted reply text.
+    """
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise ValueError("ANTHROPIC_API_KEY environment variable is not set")
+
+    # Prepare the content for Claude
+    user_content = [
+        {
+            "type": "image",
+            "source": {
+                "type": "base64",
+                "media_type": "image/jpeg",
+                "data": screenshot,
+            },
+        }
+        for screenshot in screenshots
+    ]
+
+    messages = [{"role": "user", "content": user_content}]
+    product_knowledge = get_product_knowledge()
+
+    # Initialize Anthropic client
+    client = anthropic.AsyncAnthropic(api_key=api_key)
+
+    # Generate response using Claude
+    response: Message = await client.messages.create(
+        system=f"""
+        Analyze the email thread and draft a response if appropriate. 
+        Do not draft a response if you lack the necessary information.
+        If the email is unclear, suggest asking for clarification.
+        Your name is 'Dendrite' and you represent Dendrite Toothpaste Supreme.
+        Only answer the customer's direct question.
+        Product knowledge: {product_knowledge}
+        """,
+        messages=messages,
+        model="claude-3-5-sonnet-20240620",
+        temperature=0.3,
+        max_tokens=1500,
+        tools=[
+            {
+                "name": "create_draft",
+                "description": "Use this tool to respond to the email.",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {
+                        "draft": {
+                            "type": "string",
+                        }
+                    },
+                },
+            }
+        ],
+    )
+
+    # Process Claude's response
+    for content in response.content:
+        if isinstance(content, ToolUseBlock) and content.name == "create_draft":
+            return True, content.input["draft"]
+
+    return False, response.content[0].text
+
+async def process_unread_email(page: DendritePage, subject: str):
+    """
+    Opens an unread email, analyzes its content, and replies if appropriate.
+    
+    Args:
+        page (DendritePage): The current Dendrite page object.
+        subject (str): The subject line of the email to process.
+    """
+    # Open the email
+    unread_email_el = await page.get_element(subject)
+    await unread_email_el.click()
+
+    # Expand the conversation if necessary
+    view_tab = await page.get_element("the 'View' tab next to home and help")
+    await view_tab.click()
+
+    should_expand = await page.ask(
+        "Is the 'expand conversation' button available? Return true if we should click it, false otherwise.",
+        bool,
+    )
+
+    if should_expand.return_data:
+        expand_conversation_button = await page.get_element("The 'expand conversation' button")
+        await expand_conversation_button.click()
+
+    # Capture screenshots of all messages in the thread
+    messages = await page.get_elements(
+        "Every message in the conversation, including those in expanded threads"
+    )
+    screenshots = [
+        await message_el.screenshot()
+        for message_el in messages
+        if (screenshot := await message_el.screenshot()) is not None
+    ]
+
+    # Analyze the email content and generate a reply
+    should_answer, message = await analyze_and_draft_reply(screenshots)
+    print(f"Should answer: {should_answer}\nDraft message: {message}")
+
+    if should_answer:
+        # Navigate to compose reply
+        home_button = await page.get_element("the 'home' tab next to view and help")
+        await home_button.click()
+        reply_all_button = await page.get_element("the 'reply all' button next to read/unread")
+        await reply_all_button.click()
+
+        # Fill in and send the reply
+        reply_email_input = await page.get_element("the input box for composing a reply")
+        await reply_email_input.fill(message)
+        send_button = await page.get_element("the send button")
+        await send_button.click()
+
+async def process_outlook_inbox():
+    """
+    Main function to process the Outlook inbox, identifying and responding to unread emails.
+    """
+    # Initialize and authenticate the Dendrite browser
+    browser = DendriteBrowser()
+    await browser.authenticate("https://outlook.live.com/mail/0/")
+    page = await browser.goto("https://outlook.live.com/mail/0/")
+    
+    # Wait for the inbox to load
+    await page.wait_for("The emails and dashboard to be fully loaded")
+
+    # Filter for unread emails
+    filter_emails = await page.get_element("The filter emails button with the filter icon")
+    await filter_emails.click()
+    unread_emails_option = await page.get_element("The Unread emails option in the filter dropdown")
+    await unread_emails_option.click()
+
+    # Wait for filtered results
+    await page.wait_for("Unread emails to be loaded or a clear indication of no unread emails")
+
+    # Get list of unread emails
+    unread_emails = await page.ask(
+        "List all unread emails as an array of strings in the format 'sender's name – subject'"
+    )
+
+    # Process each unread email
+    for subject in unread_emails.return_data:
+        await process_unread_email(page, subject)
+
+# Run the automation
+asyncio.run(process_outlook_inbox())
+```
