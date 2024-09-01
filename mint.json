@@ -46,14 +46,13 @@
   "navigation": [
     {
       "group": "",
-      "pages": ["introduction", "getting-started"]
+      "pages": ["introduction", "getting-started","remote-browser"]
     },
     {
       "group": "Examples",
       "pages": [
         "examples/google-search",
         "examples/authentication-instagram",
-        "examples/remote-browser",
         "examples/outlook"
       ]
     },
@@ -64,7 +63,7 @@
   ],
   "footerSocials": {
     "x": "https://x.com/dendrite_labs",
-    "github": "https://github.com/",
+    "github": "https://github.com/dendrite-systems",
     "linkedin": "https://www.linkedin.com/company/dendrite-agent/"
   }
 }
