@@ -49,7 +49,9 @@ import time
 from openai import OpenAI
 from openai.types.chat import ChatCompletionUserMessageParam
 
-from dendrite_sdk import DendriteRemoteBrowser
+
+from dendrite_sdk import DendriteBrowser
+
 
 
 def ai_request(prompt: str):
@@ -65,14 +67,12 @@ async def find_recipe(recipe: str, preferences: str):
     openai_api_key = os.environ.get("OPENAI_API_KEY", "")
     anthropic_api_key = os.environ.get("ANTHROPIC_API_KEY", "")
     dendrite_api_key = os.environ.get("DENDRITE_API_KEY", "")
-    browserbase_api_key = os.environ.get("BROWSERBASE_API_KEY", "")
 
     start_time = time.time()
-    dendrite = DendriteRemoteBrowser(
+    dendrite = DendriteBrowser(
         openai_api_key=openai_api_key,
         anthropic_api_key=anthropic_api_key,
         dendrite_api_key=dendrite_api_key,
-        browserbase_api_key=browserbase_api_key,
     )
     page = await dendrite.goto("https://www.ica.se/recept/")
 

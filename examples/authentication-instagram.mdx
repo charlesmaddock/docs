@@ -1,26 +1,23 @@
 ---
 title: Authentication
-description: "How to authenticate on any website using Dendrite"
+description: "How to authenticate on any website using Dendrite Vault"
 icon: "lock"
 ---
 
-import { BetaNote } from "/snippets/beta-note.mdx";
 
-<BetaNote />
-
-With our Chrome extension, **Dendrite Vault**, you can safely collect user sessions from your browser and simulate an authenticated session in the Dendrite Browser.
+Our Chrome extension, **Dendrite Vault**, enables you to securely share your website permissions with your AI agent, mirroring the access you have in your local browser.
 
 <Steps>
   <Step title="Download the extension">
-    First, add Dendrite Vault to your browser. On install, you will be prompted to authenticate
-    with your personal Dendrite account. See the steps below.
+    First, add Dendrite Vault to your browser, [download it here](https://chromewebstore.google.com/detail/faflkoombjlhkgieldilpijjnblgabnn?hl=en&authuser=0). On install, you will be prompted to authenticate
+    with your personal Dendrite account.
   </Step>
-  <Step title="Save auth session">
+  <Step title="Save Auth Session">
     Go to any website where you're currently authenticated. Click on the
     extension icon and press **Save authentication session**
   </Step>
-  <Step title="Authenticate">
-    Once your session has been saved, you can add it to your browser context
+  <Step title="Authenticate in Script">
+    Once your session has been saved, you can add it to your dendrite script
     with:
 
     ```python
@@ -30,64 +27,37 @@ With our Chrome extension, **Dendrite Vault**, you can safely collect user sessi
   </Step>
 </Steps>
 
-The extension isn't available on the Chrome Web Store right now, but here is how you can use it anyways:
 
-## Install Extension
+## Install and Activate Extension
 
-Download the Dendrite Vault build here:
-
-https://github.com/dendrite-agent/dendrite-vault
-
-You can download it as a zip file by pressing the green 'code' button.
-
-## Activate Extension
-
-Once you have downloaded the build you need to load it as an extension. Do this by going to 'chrome://extensions', you should see this:
-
-![Extension Dashboard](/images/auth1.png)
+Download the Dendrite Vault [here](https://chromewebstore.google.com/detail/faflkoombjlhkgieldilpijjnblgabnn?hl=en&authuser=0).
 
 
-Activate Developer Mode in the top right corner:
 
-![Activate Developer Mode](/images/auth2.png)
+You'll be prompted to log in to your Dendrite account.
 
+Once you've logged in, simple use the extension by pressing the icon in the top right corner of your browser.
 
-Press 'unload packed':
+![Extension Dashboard](images/auth-use-plugin.png)
 
-![Unload Packed](/images/auth3.png)
-
-
-Select the build file called `chrome-mv3-dev`:
-
-![Select File](/images/auth4.png)
-
-
-The extension should be available as an extension in your browser. You might need to activate it inside 'chrome://extensions'. 
-
-If you press the extensions button next to the search bar in your browser, you can open Dendrite Vault and start authenticating sessions for your agent by simply pressing the "Save Authentication Session" button, given that you are logged in to the service you want your agent to have access to:
-
-You'll need to log in to your Dendrite account first before your can start authenticating.
-
-![Use plugin](/images/auth-use-plugin.png)
 
 ## Authenticating on Instagram
 
 To log in to instagram with your agent your need to:
 
 <Steps>
-  <Step title="Install Dendrite Vault">
-    Install the Dendrite Vault extension in your browser.
+  <Step title="Log Into Instagram in your Browser">
   </Step>
-  <Step title="Log in to Instagram">
-    Log in to Instagram with your account in your own browser.
-  </Step>
-  <Step title="Save your session">
+  <Step title="Save your Authentication Session">
     Open the Dendrite Vault extension and save your session on Instagram in your browser.
+    ![Instagram Dendrite Vault Examples](images/instagram-example.png)    
   </Step>
-  <Step title="Use the authenticate function">
+  <Step title="Use the Authenticate Function">
     Use the `authenticate` function in a script, like in the example below:
   </Step>
 </Steps>
+
+
 
 ```python auth_example.py
 import asyncio
