@@ -17,7 +17,6 @@ You can use the keys in your code or have them in a `.env` file like this:
 OPENAI_API_KEY=
 ANTHROPIC_API_KEY=
 DENDRITE_API_KEY=
-BROWSERBASE_API_KEY=[only required for DendriteRemoteBrowser when scaling up]
 ```
 
 
@@ -27,12 +26,12 @@ Install the Dendrite SDK. We also need to run `playwright install` to install th
 
 With pip:
 ```
-pip install dendrite-python-sdk && playwright install 
+pip install dendrite-sdk && playwright install 
 ```
 
 With poetry:
 ```
-poetry add dendrite-python-sdk && poetry run playwright install 
+poetry add dendrite-sdk && poetry run playwright install 
 ```
 
 
@@ -42,7 +41,7 @@ For our first Dendrite script, let's start the `DendriteBrowser`, go to google.c
 
 ```python main.py
 import asyncio
-from dendrite_python_sdk import DendriteBrowser
+from dendrite_sdk import DendriteBrowser
 
 
 async def hello_world():
