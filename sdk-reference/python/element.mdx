@@ -1,0 +1,109 @@
+---
+title: "Dendrite Element"
+description: "Interact with web elements using natural language"
+---
+
+The `DendriteElement` class represents an element in the Dendrite browser environment. It wraps a Playwright Locator and provides methods for interacting with and manipulating elements in the browser.
+
+## Methods
+
+### outer_html
+
+Retrieves the outer HTML of the element.
+
+#### Usage
+
+```python
+html = await element.outer_html()
+```
+
+#### Returns
+
+- `str`: The outer HTML of the element.
+
+### screenshot
+
+Takes a screenshot of the element and returns it as a base64-encoded string.
+
+#### Usage
+
+```python
+screenshot = await element.screenshot()
+```
+
+#### Returns
+
+- `str`: A base64-encoded string of the JPEG image. Returns an empty string if the screenshot fails.
+
+### click
+
+Clicks the element.
+
+#### Usage
+
+```python
+await element.click(expected_outcome="The dropdown menu should open")
+```
+
+#### Parameters
+
+- `expected_outcome` (Optional[str]): The expected outcome of the click action.
+- `*args`: Additional positional arguments.
+- `**kwargs`: Additional keyword arguments.
+
+#### Returns
+
+- `InteractionResponse`: The response from the interaction.
+
+### fill
+
+Fills the element with a value.
+
+#### Usage
+
+```python
+await element.fill("John Doe", expected_outcome="The input field should contain the entered name")
+```
+
+#### Parameters
+
+- `value` (str): The value to fill the element with.
+- `expected_outcome` (Optional[str]): The expected outcome of the fill action.
+- `*args`: Additional positional arguments.
+- `**kwargs`: Additional keyword arguments.
+
+#### Returns
+
+- `InteractionResponse`: The response from the interaction.
+
+### hover
+
+Hovers over the element.
+
+#### Usage
+
+```python
+await element.hover(expected_outcome="A tooltip should appear")
+```
+
+#### Parameters
+
+- `expected_outcome` (Optional[str]): The expected outcome of the hover action.
+- `*args`: Additional positional arguments.
+- `**kwargs`: Additional keyword arguments.
+
+#### Returns
+
+- `InteractionResponse`: The response from the interaction.
+
+### highlight
+
+Highlights the element for debugging purposes.
+
+#### Usage
+
+```python
+await element.highlight()
+```
+
+This method is useful for visually identifying elements during development and debugging.

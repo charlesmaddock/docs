@@ -1,4 +1,123 @@
 ---
-title: DendriteBrowser
-description: ""
+title: "Dendrite Browser"
+description: "Manage browser instances and interact with web pages using natural language"
 ---
+
+The `DendriteBrowser` class manages a browser instance using Playwright, allowing interactions with web pages using natural language. It handles initialization with API keys, manages browser contexts, and provides methods for navigation, authentication, and other browser-related tasks.
+
+## Initialization
+
+```python
+from dendrite_sdk import DendriteBrowser
+
+browser = DendriteBrowser(
+    openai_api_key="your_openai_api_key",
+    anthropic_api_key="your_anthropic_api_key",
+    dendrite_api_key="your_dendrite_api_key",
+    playwright_options={"headless": False, "args": ["--start-maximized"]}
+)
+```
+
+## Methods
+
+### get_active_page
+
+Retrieves the currently active page managed by the PageManager.
+
+#### Usage
+
+```python
+active_page = await browser.get_active_page()
+```
+
+#### Returns
+
+- `DendritePage`: The active page object.
+
+### goto
+
+Navigates to the specified URL, optionally in a new tab.
+
+#### Usage
+
+```python
+page = await browser.goto("https://example.com", new_page=True, timeout=30000)
+```
+
+#### Parameters
+
+- `url` (str): The URL to navigate to.
+- `new_page` (bool, optional): Whether to open the URL in a new page. Defaults to False.
+- `timeout` (Optional[float], optional): The maximum time (in milliseconds) to wait for the page to load. Defaults to 15000.
+- `expected_page` (str, optional): A description of the expected page type for verification. Defaults to an empty string.
+
+#### Returns
+
+- `DendritePage`: The page object after navigation.
+
+### authenticate
+
+Authenticates the browser for the specified domains.
+
+#### Usage
+
+```python
+await browser.authenticate(["example.com", "subdomain.example.com"])
+```
+
+#### Parameters
+
+- `domains` (Union[str, list[str]]): A domain or list of domains to authenticate.
+
+### new_page
+
+Opens a new page in the browser.
+
+#### Usage
+
+```python
+new_page = await browser.new_page()
+```
+
+#### Returns
+
+- `DendritePage`: The newly opened page.
+
+### add_cookies
+
+Adds cookies to the current browser context.
+
+#### Usage
+
+```python
+cookies = [
+    {"name": "session_id", "value": "123456", "domain": "example.com"}
+]
+await browser.add_cookies(cookies)
+```
+
+#### Parameters
+
+- `cookies` (List[Dict[str, Any]]): A list of cookies to be added to the browser context.
+
+### close
+
+Closes the browser and uploads authentication session data if available.
+
+#### Usage
+
+```python
+await browser.close()
+```
+
+## Context Manager
+
+The `DendriteBrowser` can be used as a context manager:
+
+```python
+async with DendriteBrowser() as browser:
+    page = await browser.goto("https://example.com")
+    # Perform actions with the browser
+```
+
+This ensures that the browser is properly closed when you're done using it.

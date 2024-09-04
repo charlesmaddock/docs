@@ -35,7 +35,7 @@
     {
       "name": "Github",
       "icon": "github",
-      "url": "https://github.com"
+      "url": "https://github.com/dendrite-systems/dendrite-python-sdk"
     },
     {
       "name": "Community",
@@ -46,25 +46,32 @@
   "navigation": [
     {
       "group": "",
-      "pages": ["introduction", "getting-started"]
+      "pages": ["introduction", "getting-started","remote-browser"]
     },
     {
       "group": "Examples",
       "pages": [
         "examples/google-search",
         "examples/authentication-instagram",
-        "examples/remote-browser",
         "examples/outlook"
       ]
     },
     {
       "group": "Agent Examples",
       "pages": ["agents/cooking-agent", "agents/banking-agent"]
+    },
+    {
+      "group": "SDK Reference",
+      "pages": [
+        "sdk-reference/python/browser", 
+        "sdk-reference/python/page",
+        "sdk-reference/python/element"
+        ]
     }
   ],
   "footerSocials": {
     "x": "https://x.com/dendrite_labs",
-    "github": "https://github.com/",
+    "github": "https://github.com/dendrite-systems",
     "linkedin": "https://www.linkedin.com/company/dendrite-agent/"
   }
 }
