@@ -1,4 +1,206 @@
+Here is the relevant markdown documentation for the 'dendrite_page' class:
+
+```mdx
 ---
-title: DendritePage
-description: ""
+title: 'Dendrite Page'
+description: 'Represents a page in the Dendrite browser environment'
 ---
+
+# Dendrite Page
+
+The `DendritePage` class represents a page in the Dendrite browser environment. It provides methods for interacting with and manipulating pages in the browser.
+
+## Usage
+
+```python
+from dendrite_sdk import DendriteBrowser
+
+async with DendriteBrowser() as browser:
+    page = await browser.goto("https://example.com")
+        element = await page.get_element("The search input field")
+            await element.fill("Dendrite")
+                results = await page.extract("Get all search result titles")
+                ```
+
+                ## Constructor
+
+                ```python
+                DendritePage(
+                    page: Page,
+                        dendrite_browser: BaseDendriteBrowser[DownloadType]
+                        )
+                        ```
+
+                        Creates a new instance of the DendritePage.
+
+                        ### Parameters
+
+                        - `page` (Page): The Playwright Page object.
+                        - `dendrite_browser` (BaseDendriteBrowser[DownloadType]): The DendriteBrowser instance.
+
+                        ## Methods
+
+                        ### goto
+
+                        ```python
+                        async def goto(
+                            url: str,
+                                timeout: Optional[float] = 30000,
+                                    wait_until: Optional[Literal["commit", "domcontentloaded", "load", "networkidle"]] = "load"
+                                    ) -> None
+                                    ```
+
+                                    Navigates to a URL.
+
+                                    #### Parameters
+
+                                    - `url` (str): The URL to navigate to.
+                                    - `timeout` (Optional[float]): Maximum navigation time in milliseconds.
+                                    - `wait_until` (Optional[Literal["commit", "domcontentloaded", "load", "networkidle"]]): When to consider navigation succeeded.
+
+                                    ### get_download
+
+                                    ```python
+                                    async def get_download(timeout: float = 30000) -> DownloadType
+                                    ```
+
+                                    Retrieves the downloaded file data.
+
+                                    #### Parameters
+
+                                    - `timeout` (float): The maximum amount of time (in milliseconds) to wait for the download to complete. Defaults to 30000.
+
+                                    #### Returns
+
+                                    - `DownloadType`: The downloaded file data.
+
+                                    ### extract
+
+                                    ```python
+                                    async def extract(
+                                        prompt: Optional[str],
+                                            type_spec: Optional[TypeSpec] = None,
+                                                use_cache: bool = True
+                                                ) -> TypeSpec
+                                                ```
+
+                                                Extracts data from a web page based on a prompt and optional type specification.
+
+                                                #### Parameters
+
+                                                - `prompt` (Optional[str]): The prompt to guide the extraction. If None, an empty string is used.
+                                                - `type_spec` (Optional[TypeSpec]): The type specification for the extracted data. Defaults to None.
+                                                - `use_cache` (bool): Whether to use cached results. Defaults to True.
+
+                                                #### Returns
+
+                                                - `TypeSpec`: The extracted data.
+
+                                                ### scroll_to_bottom
+
+                                                ```python
+                                                async def scroll_to_bottom(timeout: float = 30000) -> None
+                                                ```
+
+                                                Scrolls to the bottom of the page continuously until the bottom is reached or a timeout occurs.
+
+                                                #### Parameters
+
+                                                - `timeout` (float): The maximum amount of time (in milliseconds) to continue scrolling. Defaults to 30000.
+
+                                                ### wait_for
+
+                                                ```python
+                                                async def wait_for(
+                                                    prompt: str,
+                                                        timeout: float = 2000,
+                                                            max_retries: int = 5
+                                                            )
+                                                            ```
+
+                                                            Waits for the condition specified in the prompt to become true by periodically checking the page content.
+
+                                                            #### Parameters
+
+                                                            - `prompt` (str): The prompt to determine the condition to wait for on the page.
+                                                            - `timeout` (float): The time (in milliseconds) to wait between each retry. Defaults to 2000.
+                                                            - `max_retries` (int): The maximum number of retry attempts. Defaults to 5.
+
+                                                            #### Returns
+
+                                                            - `Any`: The result of the condition evaluation if successful.
+
+                                                            #### Raises
+
+                                                            - `DendriteException`: If the condition is not met after the maximum number of retries.
+
+                                                            ### ask
+
+                                                            ```python
+                                                            async def ask(
+                                                                prompt: str,
+                                                                    type_spec: Optional[TypeSpec] = None
+                                                                    ) -> TypeSpec
+                                                                    ```
+
+                                                                    Asks a question and processes the response based on the specified type.
+
+                                                                    #### Parameters
+
+                                                                    - `prompt` (str): The question or prompt to be asked.
+                                                                    - `type_spec` (Optional[TypeSpec]): The expected return type, which can be a type or a schema. Defaults to None.
+
+                                                                    #### Returns
+
+                                                                    - `TypeSpec`: The response object containing the result, converted to the specified type if provided.
+
+                                                                    #### Raises
+
+                                                                    - `DendriteException`: If the request fails, the exception includes the failure message and a screenshot.
+
+                                                                    ### get_elements
+
+                                                                    ```python
+                                                                    async def get_elements(
+                                                                        prompt_or_elements: Union[str, Dict[str, str]],
+                                                                            use_cache: bool = True,
+                                                                                max_retries: int = 3,
+                                                                                    timeout: int = 3000,
+                                                                                        context: str = ""
+                                                                                        ) -> Union[List[DendriteElement], DendriteElementsResponse]
+                                                                                        ```
+
+                                                                                        Retrieves Dendrite elements based on either a string prompt or a dictionary of prompts.
+
+                                                                                        #### Parameters
+
+                                                                                        - `prompt_or_elements` (Union[str, Dict[str, str]]): The prompt or dictionary of prompts for element retrieval.
+                                                                                        - `use_cache` (bool): Whether to use cached results. Defaults to True.
+                                                                                        - `max_retries` (int): The maximum number of retry attempts. Defaults to 3.
+                                                                                        - `timeout` (int): The timeout (in milliseconds) between retries. Defaults to 3000.
+                                                                                        - `context` (str): Additional context for the retrieval. Defaults to an empty string.
+
+                                                                                        #### Returns
+
+                                                                                        - `Union[List[DendriteElement], DendriteElementsResponse]`: A list of elements or a response object containing the retrieved elements.
+
+                                                                                        #### Raises
+
+                                                                                        - `ValueError`: If the input is neither a string nor a dictionary.
+
+                                                                                        ### get_element
+
+                                                                                        ```python
+                                                                                        async def get_element(
+                                                                                            prompt: str,
+                                                                                                use_cache=True,
+                                                                                                    max_retries=3,
+                                                                                                        timeout=3000
+                                                                                                        ) -> DendriteElement
+                                                                                                        ```
+
+                                                                                                        Retrieves a single Dendrite element based on the provided prompt.
+
+                                                                                                        #### Parameters
+
+                                                                                                        - `prompt` (str): The prompt

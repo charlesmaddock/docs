@@ -1,4 +1,163 @@
+Here is the exact documentation for the 'dendrite_element' from the text:
+
+```mdx
 ---
-title: DendriteLocator
-description: ""
+title: 'Dendrite Element'
+description: 'Represents an element in the Dendrite browser environment'
 ---
+
+# Dendrite Element
+
+The `DendriteElement` class represents an element in the Dendrite browser environment. It wraps a Playwright Locator and provides methods for interacting with and manipulating elements in the browser.
+
+## Usage
+
+```python
+from dendrite_sdk import DendriteBrowser
+
+async with DendriteBrowser() as browser:
+    page = await browser.goto("https://example.com")
+        element = await page.get_element("The search input field")
+            await element.fill("Dendrite")
+            ```
+
+            ## Constructor
+
+            ```python
+            DendriteElement(
+                dendrite_id: str,
+                    locator: Locator,
+                        dendrite_browser: BaseDendriteBrowser
+                        )
+                        ```
+
+                        Creates a new instance of the DendriteElement.
+
+                        ### Parameters
+
+                        - `dendrite_id` (str): The dendrite_id identifier for this element.
+                        - `locator` (Locator): The Playwright locator for this element.
+                        - `dendrite_browser` (DendriteBrowser): The browser instance.
+
+                        ## Methods
+
+                        ### outer_html
+
+                        ```python
+                        async def outer_html() -> str
+                        ```
+
+                        Returns the outer HTML of the element.
+
+                        #### Returns
+
+                        - `str`: The outer HTML of the element.
+
+                        ### screenshot
+
+                        ```python
+                        async def screenshot() -> str
+                        ```
+
+                        Takes a screenshot of the element and returns it as a base64-encoded string.
+
+                        #### Returns
+
+                        - `str`: A base64-encoded string of the JPEG image. Returns an empty string if the screenshot fails.
+
+                        ### click
+
+                        ```python
+                        async def click(
+                            expected_outcome: Optional[str] = None,
+                                *args,
+                                    **kwargs
+                                    ) -> InteractionResponse
+                                    ```
+
+                                    Clicks the element.
+
+                                    #### Parameters
+
+                                    - `expected_outcome` (Optional[str]): The expected outcome of the click action.
+                                    - `*args`: Additional positional arguments.
+                                    - `**kwargs`: Additional keyword arguments.
+
+                                    #### Returns
+
+                                    - `InteractionResponse`: The response from the interaction.
+
+                                    ### fill
+
+                                    ```python
+                                    async def fill(
+                                        value: str,
+                                            expected_outcome: Optional[str] = None,
+                                                *args,
+                                                    **kwargs
+                                                    ) -> InteractionResponse
+                                                    ```
+
+                                                    Fills the element with a value.
+
+                                                    #### Parameters
+
+                                                    - `value` (str): The value to fill the element with.
+                                                    - `expected_outcome` (Optional[str]): The expected outcome of the fill action.
+                                                    - `*args`: Additional positional arguments.
+                                                    - `**kwargs`: Additional keyword arguments.
+
+                                                    #### Returns
+
+                                                    - `InteractionResponse`: The response from the interaction.
+
+                                                    ### hover
+
+                                                    ```python
+                                                    async def hover(
+                                                        expected_outcome: Optional[str] = None,
+                                                            *args,
+                                                                **kwargs
+                                                                ) -> InteractionResponse
+                                                                ```
+
+                                                                Hovers over the element.
+
+                                                                #### Parameters
+
+                                                                - `expected_outcome` (Optional[str]): The expected outcome of the hover action.
+                                                                - `*args`: Additional positional arguments.
+                                                                - `**kwargs`: Additional keyword arguments.
+
+                                                                #### Returns
+
+                                                                - `InteractionResponse`: The response from the interaction.
+
+                                                                ### highlight
+
+                                                                ```python
+                                                                async def highlight()
+                                                                ```
+
+                                                                Highlights the element. This is a convenience method for debugging purposes.
+
+                                                                ## Properties
+
+                                                                ### dendrite_id
+
+                                                                ```python
+                                                                @property
+                                                                def dendrite_id(self) -> str
+                                                                ```
+
+                                                                The dendrite_id identifier for this element.
+
+                                                                ### locator
+
+                                                                ```python
+                                                                @property
+                                                                def locator(self) -> Locator
+                                                                ```
+
+                                                                The Playwright locator for this element.
+                                                                ```
