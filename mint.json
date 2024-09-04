@@ -64,8 +64,8 @@
       "group": "SDK Reference",
       "pages": [
         "sdk-reference/python/browser", 
-        "sdk-reference/python/element",
-        "sdk-reference/python/page"
+        "sdk-reference/python/page",
+        "sdk-reference/python/element"
         ]
     }
   ],
