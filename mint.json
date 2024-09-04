@@ -59,8 +59,8 @@
     {
       "group": "Agent Examples",
       "pages": ["agents/cooking-agent", "agents/banking-agent"]
-    }
-     {
+    },
+    {
       "group": "SDK Reference",
       "pages": [
         "sdk-reference/browser", 
