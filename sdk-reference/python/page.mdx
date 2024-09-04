@@ -1,204 +1,217 @@
 ---
-title: 'Dendrite Page'
-description: 'Represents a page in the Dendrite browser environment'
+title: "Dendrite Page"
+description: "Interact with web pages using natural language"
 ---
-
-# Dendrite Page
 
 The `DendritePage` class represents a page in the Dendrite browser environment. It provides methods for interacting with and manipulating pages in the browser.
 
-## Usage
+## Properties
+
+### url
+
+Get the current URL of the page.
+
+#### Usage
 
 ```python
-from dendrite_sdk import DendriteBrowser
+current_url = page.url
+```
 
-async with DendriteBrowser() as browser:
-    page = await browser.goto("https://example.com")
-        element = await page.get_element("The search input field")
-            await element.fill("Dendrite")
-                results = await page.extract("Get all search result titles")
-                ```
+#### Returns
 
-                ## Constructor
+- `str`: The current URL.
 
-                ```python
-                DendritePage(
-                    page: Page,
-                        dendrite_browser: BaseDendriteBrowser[DownloadType]
-                        )
-                        ```
+### keyboard
 
-                        Creates a new instance of the DendritePage.
+Get the keyboard object for the page.
 
-                        ### Parameters
+#### Usage
 
-                        - `page` (Page): The Playwright Page object.
-                        - `dendrite_browser` (BaseDendriteBrowser[DownloadType]): The DendriteBrowser instance.
+```python
+await page.keyboard.press("Enter")
+```
 
-                        ## Methods
+#### Returns
 
-                        ### goto
+- `Keyboard`: The Playwright Keyboard object.
 
-                        ```python
-                        async def goto(
-                            url: str,
-                                timeout: Optional[float] = 30000,
-                                    wait_until: Optional[Literal["commit", "domcontentloaded", "load", "networkidle"]] = "load"
-                                    ) -> None
-                                    ```
+## Methods
 
-                                    Navigates to a URL.
+### goto
 
-                                    #### Parameters
+Navigate to a URL.
 
-                                    - `url` (str): The URL to navigate to.
-                                    - `timeout` (Optional[float]): Maximum navigation time in milliseconds.
-                                    - `wait_until` (Optional[Literal["commit", "domcontentloaded", "load", "networkidle"]]): When to consider navigation succeeded.
+#### Usage
 
-                                    ### get_download
+```python
+await page.goto("https://example.com", timeout=30000, wait_until="networkidle")
+```
 
-                                    ```python
-                                    async def get_download(timeout: float = 30000) -> DownloadType
-                                    ```
+#### Parameters
 
-                                    Retrieves the downloaded file data.
+- `url` (str): The URL to navigate to.
+- `timeout` (Optional[float]): Maximum navigation time in milliseconds.
+- `wait_until` (Optional[Literal["commit", "domcontentloaded", "load", "networkidle"]]): When to consider navigation succeeded.
 
-                                    #### Parameters
+### get_download
 
-                                    - `timeout` (float): The maximum amount of time (in milliseconds) to wait for the download to complete. Defaults to 30000.
+Retrieves the downloaded file data.
 
-                                    #### Returns
+#### Usage
 
-                                    - `DownloadType`: The downloaded file data.
+```python
+download = await page.get_download(timeout=60000)
+```
 
-                                    ### extract
+#### Parameters
 
-                                    ```python
-                                    async def extract(
-                                        prompt: Optional[str],
-                                            type_spec: Optional[TypeSpec] = None,
-                                                use_cache: bool = True
-                                                ) -> TypeSpec
-                                                ```
+- `timeout` (float, optional): The maximum amount of time (in milliseconds) to wait for the download to complete. Defaults to 30000.
 
-                                                Extracts data from a web page based on a prompt and optional type specification.
+#### Returns
 
-                                                #### Parameters
+- The downloaded file data.
 
-                                                - `prompt` (Optional[str]): The prompt to guide the extraction. If None, an empty string is used.
-                                                - `type_spec` (Optional[TypeSpec]): The type specification for the extracted data. Defaults to None.
-                                                - `use_cache` (bool): Whether to use cached results. Defaults to True.
+### extract
 
-                                                #### Returns
+Extract data from a web page based on a prompt and optional type specification.
 
-                                                - `TypeSpec`: The extracted data.
+#### Usage
 
-                                                ### scroll_to_bottom
+```python
+data = await page.extract("Get all product prices", type_spec=List[float])
+```
 
-                                                ```python
-                                                async def scroll_to_bottom(timeout: float = 30000) -> None
-                                                ```
+#### Parameters
 
-                                                Scrolls to the bottom of the page continuously until the bottom is reached or a timeout occurs.
+- `prompt` (Optional[str]): The prompt to guide the extraction. If None, an empty string is used.
+- `type_spec` (Optional[TypeSpec], optional): The type specification for the extracted data. Defaults to None.
+- `use_cache` (bool, optional): Whether to use cached results. Defaults to True.
 
-                                                #### Parameters
+#### Returns
 
-                                                - `timeout` (float): The maximum amount of time (in milliseconds) to continue scrolling. Defaults to 30000.
+- The extracted data of the specified type.
 
-                                                ### wait_for
+### scroll_to_bottom
 
-                                                ```python
-                                                async def wait_for(
-                                                    prompt: str,
-                                                        timeout: float = 2000,
-                                                            max_retries: int = 5
-                                                            )
-                                                            ```
+Scrolls to the bottom of the page continuously until the bottom is reached or a timeout occurs.
 
-                                                            Waits for the condition specified in the prompt to become true by periodically checking the page content.
+#### Usage
 
-                                                            #### Parameters
+```python
+await page.scroll_to_bottom(timeout=60000)
+```
 
-                                                            - `prompt` (str): The prompt to determine the condition to wait for on the page.
-                                                            - `timeout` (float): The time (in milliseconds) to wait between each retry. Defaults to 2000.
-                                                            - `max_retries` (int): The maximum number of retry attempts. Defaults to 5.
+#### Parameters
 
-                                                            #### Returns
+- `timeout` (float, optional): The maximum amount of time (in milliseconds) to continue scrolling. Defaults to 30000.
 
-                                                            - `Any`: The result of the condition evaluation if successful.
+### wait_for
 
-                                                            #### Raises
+Waits for the condition specified in the prompt to become true by periodically checking the page content.
 
-                                                            - `DendriteException`: If the condition is not met after the maximum number of retries.
+#### Usage
 
-                                                            ### ask
+```python
+await page.wait_for("The login button to become clickable", timeout=5000, max_retries=10)
+```
 
-                                                            ```python
-                                                            async def ask(
-                                                                prompt: str,
-                                                                    type_spec: Optional[TypeSpec] = None
-                                                                    ) -> TypeSpec
-                                                                    ```
+#### Parameters
 
-                                                                    Asks a question and processes the response based on the specified type.
+- `prompt` (str): The prompt to determine the condition to wait for on the page.
+- `timeout` (float, optional): The time (in milliseconds) to wait between each retry. Defaults to 2000.
+- `max_retries` (int, optional): The maximum number of retry attempts. Defaults to 5.
 
-                                                                    #### Parameters
+#### Returns
 
-                                                                    - `prompt` (str): The question or prompt to be asked.
-                                                                    - `type_spec` (Optional[TypeSpec]): The expected return type, which can be a type or a schema. Defaults to None.
+- Any: The result of the condition evaluation if successful.
 
-                                                                    #### Returns
+### ask
 
-                                                                    - `TypeSpec`: The response object containing the result, converted to the specified type if provided.
+Asks a question about the current page and processes the response based on the specified type.
 
-                                                                    #### Raises
+#### Usage
 
-                                                                    - `DendriteException`: If the request fails, the exception includes the failure message and a screenshot.
+```python
+response = await page.ask("What is the title of the main article?", type_spec=str)
+```
 
-                                                                    ### get_elements
+#### Parameters
 
-                                                                    ```python
-                                                                    async def get_elements(
-                                                                        prompt_or_elements: Union[str, Dict[str, str]],
-                                                                            use_cache: bool = True,
-                                                                                max_retries: int = 3,
-                                                                                    timeout: int = 3000,
-                                                                                        context: str = ""
-                                                                                        ) -> Union[List[DendriteElement], DendriteElementsResponse]
-                                                                                        ```
+- `prompt` (str): The question or prompt to be asked.
+- `type_spec` (Optional[TypeSpec], optional): The expected return type, which can be a type or a schema. Defaults to None.
 
-                                                                                        Retrieves Dendrite elements based on either a string prompt or a dictionary of prompts.
+#### Returns
 
-                                                                                        #### Parameters
+- The response object containing the result, converted to the specified type if provided.
 
-                                                                                        - `prompt_or_elements` (Union[str, Dict[str, str]]): The prompt or dictionary of prompts for element retrieval.
-                                                                                        - `use_cache` (bool): Whether to use cached results. Defaults to True.
-                                                                                        - `max_retries` (int): The maximum number of retry attempts. Defaults to 3.
-                                                                                        - `timeout` (int): The timeout (in milliseconds) between retries. Defaults to 3000.
-                                                                                        - `context` (str): Additional context for the retrieval. Defaults to an empty string.
+### get_elements
 
-                                                                                        #### Returns
+Retrieves Dendrite elements based on either a string prompt or a dictionary of prompts.
 
-                                                                                        - `Union[List[DendriteElement], DendriteElementsResponse]`: A list of elements or a response object containing the retrieved elements.
+#### Usage
 
-                                                                                        #### Raises
+```python
+elements = await page.get_elements("All input fields on the page")
+```
 
-                                                                                        - `ValueError`: If the input is neither a string nor a dictionary.
+#### Parameters
 
-                                                                                        ### get_element
+- `prompt_or_elements` (Union[str, Dict[str, str]]): The prompt or dictionary of prompts for element retrieval.
+- `use_cache` (bool, optional): Whether to use cached results. Defaults to True.
+- `max_retries` (int, optional): The maximum number of retry attempts. Defaults to 3.
+- `timeout` (int, optional): The timeout (in milliseconds) between retries. Defaults to 3000.
+- `context` (str, optional): Additional context for the retrieval. Defaults to an empty string.
 
-                                                                                        ```python
-                                                                                        async def get_element(
-                                                                                            prompt: str,
-                                                                                                use_cache=True,
-                                                                                                    max_retries=3,
-                                                                                                        timeout=3000
-                                                                                                        ) -> DendriteElement
-                                                                                                        ```
+#### Returns
 
-                                                                                                        Retrieves a single Dendrite element based on the provided prompt.
+- Union[List[DendriteElement], DendriteElementsResponse]: A list of elements or a response object containing the retrieved elements.
 
-                                                                                                        #### Parameters
+### get_element
 
-                                                                                                        - `prompt` (str): The prompt describing the element to be retrieved.
-                                                                                                        - `use_cache` (bool): Whether to use cached results
+Retrieves a single Dendrite element based on the provided prompt.
+
+#### Usage
+
+```python
+element = await page.get_element("The submit button")
+```
+
+#### Parameters
+
+- `prompt` (str): The prompt describing the element to be retrieved.
+- `use_cache` (bool, optional): Whether to use cached results. Defaults to True.
+- `max_retries` (int, optional): The maximum number of retry attempts. Defaults to 3.
+- `timeout` (int, optional): The timeout (in milliseconds) between retries. Defaults to 3000.
+
+#### Returns
+
+- DendriteElement: The retrieved element.
+
+### upload_files
+
+Uploads files to the page using a file chooser.
+
+#### Usage
+
+```python
+await page.upload_files("path/to/file.txt", timeout=60000)
+```
+
+#### Parameters
+
+- `files` (Union[str, pathlib.Path, FilePayload, Sequence[Union[str, pathlib.Path]], Sequence[FilePayload]]): The file(s) to be uploaded.
+- `timeout` (float, optional): The maximum amount of time (in milliseconds) to wait for the file chooser to be ready. Defaults to 30000.
+
+### get_content
+
+Retrieves the content of the current page.
+
+#### Usage
+
+```python
+content = await page.get_content()
+```
+
+#### Returns
+
+- `str`: The HTML content of the current page.

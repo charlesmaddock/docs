@@ -1,251 +1,123 @@
 ---
-title: 'Dendrite Browser'
-description: 'A powerful browser automation tool for web interactions using natural language'
+title: "Dendrite Browser"
+description: "Manage browser instances and interact with web pages using natural language"
 ---
-
-# Dendrite Browser
 
 The `DendriteBrowser` class manages a browser instance using Playwright, allowing interactions with web pages using natural language. It handles initialization with API keys, manages browser contexts, and provides methods for navigation, authentication, and other browser-related tasks.
 
-## Installation
-
-```bash
-pip install dendrite-sdk
-```
-
-## Usage
+## Initialization
 
 ```python
 from dendrite_sdk import DendriteBrowser
 
+browser = DendriteBrowser(
+    openai_api_key="your_openai_api_key",
+    anthropic_api_key="your_anthropic_api_key",
+    dendrite_api_key="your_dendrite_api_key",
+    playwright_options={"headless": False, "args": ["--start-maximized"]}
+)
+```
+
+## Methods
+
+### get_active_page
+
+Retrieves the currently active page managed by the PageManager.
+
+#### Usage
+
+```python
+active_page = await browser.get_active_page()
+```
+
+#### Returns
+
+- `DendritePage`: The active page object.
+
+### goto
+
+Navigates to the specified URL, optionally in a new tab.
+
+#### Usage
+
+```python
+page = await browser.goto("https://example.com", new_page=True, timeout=30000)
+```
+
+#### Parameters
+
+- `url` (str): The URL to navigate to.
+- `new_page` (bool, optional): Whether to open the URL in a new page. Defaults to False.
+- `timeout` (Optional[float], optional): The maximum time (in milliseconds) to wait for the page to load. Defaults to 15000.
+- `expected_page` (str, optional): A description of the expected page type for verification. Defaults to an empty string.
+
+#### Returns
+
+- `DendritePage`: The page object after navigation.
+
+### authenticate
+
+Authenticates the browser for the specified domains.
+
+#### Usage
+
+```python
+await browser.authenticate(["example.com", "subdomain.example.com"])
+```
+
+#### Parameters
+
+- `domains` (Union[str, list[str]]): A domain or list of domains to authenticate.
+
+### new_page
+
+Opens a new page in the browser.
+
+#### Usage
+
+```python
+new_page = await browser.new_page()
+```
+
+#### Returns
+
+- `DendritePage`: The newly opened page.
+
+### add_cookies
+
+Adds cookies to the current browser context.
+
+#### Usage
+
+```python
+cookies = [
+    {"name": "session_id", "value": "123456", "domain": "example.com"}
+]
+await browser.add_cookies(cookies)
+```
+
+#### Parameters
+
+- `cookies` (List[Dict[str, Any]]): A list of cookies to be added to the browser context.
+
+### close
+
+Closes the browser and uploads authentication session data if available.
+
+#### Usage
+
+```python
+await browser.close()
+```
+
+## Context Manager
+
+The `DendriteBrowser` can be used as a context manager:
+
+```python
 async with DendriteBrowser() as browser:
     page = await browser.goto("https://example.com")
-        # Perform actions on the page
-        ```
+    # Perform actions with the browser
+```
 
-        ## Constructor
-
-        ```python
-        DendriteBrowser(
-            id=None,
-                openai_api_key: Optional[str] = None,
-                    dendrite_api_key: Optional[str] = None,
-                        anthropic_api_key: Optional[str] = None,
-                            playwright_options: Any = {
-                                    "headless": False,
-                                            "args": STEALTH_ARGS,
-                                                }
-                                                )
-                                                ```
-
-                                                Creates a new instance of the DendriteBrowser.
-
-                                                ### Parameters
-
-                                                - `id` (Optional[str]): An optional ID for the browser instance. If not provided, a UUID is generated.
-                                                - `openai_api_key` (Optional[str]): The OpenAI API key. If not provided, it's fetched from the environment variables.
-                                                - `dendrite_api_key` (Optional[str]): The Dendrite API key. If not provided, it's fetched from the environment variables.
-                                                - `anthropic_api_key` (Optional[str]): The Anthropic API key. If not provided, it's fetched from the environment variables.
-                                                - `playwright_options` (Any): Options for configuring Playwright. Defaults to running in non-headless mode with stealth arguments.
-
-                                                ### Raises
-
-                                                - `Exception`: If any of the required API keys (Dendrite, OpenAI, Anthropic) are not provided or found in the environment variables.
-
-                                                ## Methods
-
-                                                ### get_active_page
-
-                                                ```python
-                                                async def get_active_page() -> DendritePage[DownloadType]
-                                                ```
-
-                                                Retrieves the currently active page managed by the PageManager.
-
-                                                #### Returns
-
-                                                - `DendritePage`: The active page object.
-
-                                                #### Raises
-
-                                                - `Exception`: If there is an issue retrieving the active page.
-
-                                                ### goto
-
-                                                ```python
-                                                async def goto(
-                                                    url: str,
-                                                        new_page: bool = False,
-                                                            timeout: Optional[float] = 15000,
-                                                                expected_page: str = ""
-                                                                ) -> DendritePage[DownloadType]
-                                                                ```
-
-                                                                Navigates to the specified URL, optionally in a new tab.
-
-                                                                #### Parameters
-
-                                                                - `url` (str): The URL to navigate to.
-                                                                - `new_page` (bool): Whether to open the URL in a new page. Defaults to False.
-                                                                - `timeout` (Optional[float]): The maximum time (in milliseconds) to wait for the page to load. Defaults to 15000.
-                                                                - `expected_page` (str): A description of the expected page type for verification. Defaults to an empty string.
-
-                                                                #### Returns
-
-                                                                - `DendritePage`: The page object after navigation.
-
-                                                                #### Raises
-
-                                                                - `Exception`: If there is an error during navigation or if the expected page type is not found.
-
-                                                                ### authenticate
-
-                                                                ```python
-                                                                async def authenticate(domains: Union[str, list[str]])
-                                                                ```
-
-                                                                Authenticates the browser for the specified domains.
-
-                                                                #### Parameters
-
-                                                                - `domains` (Union[str, list[str]]): A domain or list of domains to authenticate.
-
-                                                                #### Raises
-
-                                                                - `Exception`: If authentication fails.
-
-                                                                ### new_page
-
-                                                                ```python
-                                                                async def new_page() -> DendritePage[DownloadType]
-                                                                ```
-
-                                                                Opens a new page in the browser.
-
-                                                                #### Returns
-
-                                                                - `DendritePage`: The newly opened page.
-
-                                                                #### Raises
-
-                                                                - `Exception`: If there is an issue opening a new page.
-
-                                                                ### add_cookies
-
-                                                                ```python
-                                                                async def add_cookies(cookies)
-                                                                ```
-
-                                                                Adds cookies to the current browser context.
-
-                                                                #### Parameters
-
-                                                                - `cookies` (List[Dict[str, Any]]): A list of cookies to be added to the browser context.
-
-                                                                #### Raises
-
-                                                                - `Exception`: If the browser context is not initialized.
-
-                                                                ### close
-
-                                                                ```python
-                                                                async def close()
-                                                                ```
-
-                                                                Closes the browser and uploads authentication session data if available.
-
-                                                                #### Raises
-
-                                                                - `Exception`: If there is an issue closing the browser or uploading session data.
-
-                                                                ## Properties
-
-                                                                ### id
-
-                                                                ```python
-                                                                @property
-                                                                def id(self) -> UUID
-                                                                ```
-
-                                                                The unique identifier for the DendriteBrowser instance.
-
-                                                                ### auth_data
-
-                                                                ```python
-                                                                @property
-                                                                def auth_data(self) -> Optional[AuthSession]
-                                                                ```
-
-                                                                The authentication session data for the browser.
-
-                                                                ### dendrite_api_key
-
-                                                                ```python
-                                                                @property
-                                                                def dendrite_api_key(self) -> str
-                                                                ```
-
-                                                                The API key for Dendrite, used for interactions with the Dendrite API.
-
-                                                                ### playwright_options
-
-                                                                ```python
-                                                                @property
-                                                                def playwright_options(self) -> dict
-                                                                ```
-
-                                                                Options for configuring the Playwright browser instance.
-
-                                                                ### playwright
-
-                                                                ```python
-                                                                @property
-                                                                def playwright(self) -> Optional[Playwright]
-                                                                ```
-
-                                                                The Playwright instance managing the browser.
-
-                                                                ### browser_context
-
-                                                                ```python
-                                                                @property
-                                                                def browser_context(self) -> Optional[BrowserContext]
-                                                                ```
-
-                                                                The current browser context, which may include cookies and other session data.
-
-                                                                ### active_page_manager
-
-                                                                ```python
-                                                                @property
-                                                                def active_page_manager(self) -> Optional[PageManager]
-                                                                ```
-
-                                                                The manager responsible for handling active pages within the browser context.
-
-                                                                ### user_id
-
-                                                                ```python
-                                                                @property
-                                                                def user_id(self) -> Optional[str]
-                                                                ```
-
-                                                                The user ID associated with the browser session.
-
-                                                                ### browser_api_client
-
-                                                                ```python
-                                                                @property
-                                                                def browser_api_client(self) -> BrowserAPIClient
-                                                                ```
-
-                                                                The API client used for communicating with the Dendrite API.
-
-                                                                ### llm_config
-
-                                                                ```python
-                                                                @property
-                                                                def llm_config(self) -> LLMConfig
-                                                                ```
-
-                                                                The configuration for the language models, including API keys for OpenAI and Anthropic.
+This ensures that the browser is properly closed when you're done using it.
