@@ -70,7 +70,7 @@ async def list_account_information() -> AccountDetails:
     # Now we extract all the account details as specifed in the AccountDetails model and return them
     res = await page.extract("Please extract the account details", AccountDetails)
 
-    return res.return_data
+    return res
 
 
 async def get_transactions() -> str:
@@ -326,7 +326,7 @@ async def list_account_information() -> AccountDetails:
     # Now we extract all the account details as specifed in the AccountDetails model and return them
     res = await page.extract("Please extract the account details", AccountDetails)
 
-    return res.return_data
+    return res
 
 
 def get_file_path():

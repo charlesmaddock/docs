@@ -57,10 +57,10 @@ To showcase Dendrite's **extraction functionality**, let's click the 'videos' ta
     await video_tab.click()
 
     # Extract all the video URLs.
-    extract_res = await page.extract(
+    urls = await page.extract(
         "Get all the urls of the displayed videos as a list of valid urls as strings"
     )
-    urls = extract_res.return_data
+    
     for url in urls:
         print("url: ", url)
 
@@ -115,10 +115,9 @@ async def google_search_videos(query: str):
     await video_tab.click()
 
     # Extract all the videos URLs
-    data = await page.extract(
+    urls = await page.extract(
         "Get all the urls of the displayed videos as a list of valid urls as strings"
     )
-    urls = data.return_data
     for url in urls:
         print("url: ", url)
 

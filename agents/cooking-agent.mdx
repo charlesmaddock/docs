@@ -96,11 +96,11 @@ async def find_recipe(recipe: str, preferences: str):
         "Get all the recipes on the page and return and array of dicts like this {{name: str, time_to_make: str, url_to_recipe: str}}"
     )
 
-    print("recipes_res.return_data: ", recipes_res.return_data)
+    print("recipes_res: ", recipes_res)
 
     find_recipe_prompt = f"""Here are some recipes:
     
-    {recipes_res.return_data}
+    {recipes_res}
     
     Please output the url of the recipe that best suits these food preferences: {preferences}. 
     
@@ -113,7 +113,7 @@ async def find_recipe(recipe: str, preferences: str):
         str,
     )
 
-    generated_recipe = res.return_data
+    generated_recipe = res
     print(
         f"Find recipe took: {time.time() - start_time}. Here is the recipe:\n\n{generated_recipe}"
     )

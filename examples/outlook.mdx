@@ -125,7 +125,7 @@ async def process_unread_email(page: DendritePage, subject: str):
         bool,
     )
 
-    if should_expand.return_data:
+    if should_expand:
         expand_conversation_button = await page.get_element("The 'expand conversation' button")
         await expand_conversation_button.click()
 
@@ -183,7 +183,7 @@ async def process_outlook_inbox():
     )
 
     # Process each unread email
-    for subject in unread_emails.return_data:
+    for subject in unread_emails:
         await process_unread_email(page, subject)
 
 # Run the automation
