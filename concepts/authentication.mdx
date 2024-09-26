@@ -19,7 +19,7 @@ Our Chrome extension, **Dendrite Vault**, enables you to securely share your web
     with:
 
     ```python
-    DendriteBrowser(auth=["domain.com"])
+    Dendrite(auth=["domain.com", "example.com"])
     ```
 
   </Step>
@@ -46,12 +46,12 @@ To log in to instagram with your agent your need to:
     Open the Dendrite Vault extension and save your session on Instagram in your browser.
     ![Instagram Dendrite Vault Examples](images/instagram-example.png)    
   </Step>
-  <Step title="Use with DendriteBrowser">
-    Initiate your DendriteBrowser with an authenticated session.
+  <Step title="Use with Dendrite">
+    Initiate your Dendrite client with an authenticated session.
 
     ```python auth_example.py
-    # Initiate browser with instagram session
-    with DendriteBrowser(auth=["instagram.com"]) as client:
+    # Initiate client with instagram session
+    with Dendrite(auth=["instagram.com"]) as client:
       # Go to website with authenticated session
       client.goto(
         "https://instagram.com",

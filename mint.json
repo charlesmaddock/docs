@@ -46,7 +46,7 @@
   "navigation": [
     {
       "group": "",
-      "pages": ["introduction", "getting-started"]
+      "pages": ["introduction", "getting-started", "examples"]
     },
     {
       "group": "Concepts",
