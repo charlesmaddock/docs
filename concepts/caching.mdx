@@ -1,0 +1,22 @@
+---
+title: Caching
+description: "Dendrite uses agents to build scripts and caching to run them"
+---
+
+## Script caching
+
+When using Dendrite methods that utilize natural language prompts, there is an agent under the hood that understands what element your looking for, inspects the DOM, and generates a script or selector for the described element. When a script succeeds, it will be automatically cached for future reference.
+
+That means that when you write a Dendrite script, you will get the benefit of semantic understanding when running your code for the first time, but won't have to pay for inference costs in future runs. Additional benefits include:
+
+1. Execution speed
+2. Reliability
+3. Self healing
+
+In most cases, caching will be enabled by default. Cached scripts will be used based on **prompt and domain**.
+
+## Self healing
+
+If a cached script fails, our agents will repeat what it did the first time you ran your script. It will use the natural language prompt in your code, like `click("search button")` for example, inspect the DOM, and create a new script which will be re-cached upon success.
+
+This gives your scripts self healing capabilities, for when the underlying DOM changes, while still keeping the general elements your looking for.

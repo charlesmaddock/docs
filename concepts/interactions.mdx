@@ -1,0 +1,64 @@
+---
+title: Interactions
+description: "Interacting and performing actions on websites"
+---
+
+## Interaction basics
+
+Dendrite enables easy web based actions for AI agents. With the Dendrite client, you can create workflows that match the way a human would act in a browser, using intuitive tools like `click` and `fill`, all with natural language.
+
+Here are the core methods used when interacting with web pages through the Dendrite client:
+
+- `click` for clicking on the described element
+- `fill` for filling a field with some value
+- `fill_fields` for filling multiple fields in a form
+- `press` for simulating a keypress
+
+## Creating Interactions
+
+When creating a web interaction function for your AI agent, we recommend doing the action manually in your own browser first and breaking it down in steps. For example:
+
+1. Navigating to mail.google.com (and making sure you're signed in)
+2. Clicking on the button for creating new email
+3. Entering the recipient email
+4. Writing the subject line
+5. Writing the email content
+6. Pressing the send button
+
+These steps will inform how you can instruct your agent to follow the same steps on any website.
+
+### Writing code
+
+The next step is to write the code. The example above would translate to something like this:
+
+```python
+from dendrite_sdk import Dendrite
+
+def send_email(to, subject, message):
+  # Initiate Dendrite instance and authenticate
+  with Dendrite(auth=["mail.google.com"]) as client:
+
+    # Navigate and check for successful authentication
+    client.goto("https://mail.google.com/", expected_page="Gmail inbox")
+
+    # Create a new email and populate fields
+    client.click("New email draft button")
+    client.fill_fields({
+      "Recipient": to,
+      "Subject": subject,
+      "Message": message
+    })
+
+    # Send email
+    client.click("The button for sending the email")
+
+send_email(
+  "john@doe.com",
+  "Who are you",
+  "Why does everyone mention you in their code all the time?"
+)
+```
+
+In the above example, we create the `send_email` function that takes in `to`, `subject` and `message` as arguments. This tool would then be passed on to an agent to be used by its function calling abilities.
+
+The tool uses the Dendrite client to perform the actions in the browser, just like a human would. This gives you infinite flexibility to modify your agent's behaviour, without being limited by traditional REST APIs.

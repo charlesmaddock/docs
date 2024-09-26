@@ -1,0 +1,114 @@
+---
+title: Navigation
+description: "Navigating the web with the Dendrite browser"
+---
+
+## Navigation Basics
+
+Dendrite provides powerful tools for building complex navigation flows for your AI agent web tools. The primary method for navigation is `goto`, which loads a page in the current or a new tab. Dendrite also has build in support for authenticating on websites. Additionally, Dendrite offers mechanisms to verify that the correct page has loaded and to wait for specific conditions before proceeding.
+
+The key concepts and methods related to navigation are:
+
+- `goto` for loading web pages
+- `expected_page` for page verification
+- `wait_for` for synchronizing with page conditions
+- `ask` for querying the state of the page
+- Handling authentication
+- Multiple tabs
+
+## Navigating to a Page with goto
+
+The `goto` method is used to navigate to a specified URL. It can open the URL in the active page or in a new tab.
+
+The `goto` method returns a [Page](/sdk-reference/python/page) object, representing the page.
+
+### Basic Usage
+
+```python
+from dendrite_sdk import Dendrite
+
+# Initialize Dendrite instance
+with Dendrite() as client: # Navigate to a website
+  client.goto("https://www.example.com")
+```
+
+In this example we navigate to "https://www.example.com" using the active page. If there is no active page, one is created.
+
+### Using expected_page for Verification
+
+The `expected_page` parameter allows you to describe the type of page that should be expected after navigation. Dendrite uses this description to verify that the correct page has loaded.
+
+```python
+client.goto("https://www.example.com/dashboard", expected_page="User dashboard")
+```
+
+If the loaded page does not match the expected description, Dendrite can raise an exception or handle the discrepancy as needed.
+
+On web pages with long loading times, an exception will be thrown since the page doesn't match the expected page query. In those cases, it is helpful to use a combination of `wait_for` and `ask`.
+
+```python
+client.goto("https://www.example.com/dashboard")
+client.wait_for("Loading to complete")
+correct_page = client.ask("Is this a User Dashboard?", type_spec=bool)
+```
+
+### Opening a URL in a New Tab
+
+You can open the URL in a new tab by setting `new_page=True`. This creates a new `Page` instance, allowing for interaction with multiple pages simultaneously.
+
+## Authentication Session Management
+
+Authenticating on behalf of a user is simple using Dendrite. Just use our browser extension, Dendrite Vault, to handle sessions and then provide the url(s) you want to authenticate on when initiating your Dendrite client.
+
+```python
+with Dendrite(auth=["mail.google.com"]) as client:
+  try:
+    client.goto("https://mail.google.com/", expected_page="Gmail inbox")
+  except DendriteException as e:
+    print("Authentication failed, page was not a Gmail inbox")
+```
+
+In the example above, we authenticate on "mail.google.com" and navigate to the Gmail inbox. If the page is not a Gmail inbox, we can conclude that the authentication has failed.
+
+<Card title="Authentication" icon="lock" href="/concepts/authentication">
+  Read more about authentication here
+</Card>
+
+## Managing Multiple Tabs and Pages
+
+When working with multiple tabs, it's important to keep track of each `Page` instance to ensure that actions are performed on the correct page. The `Dendrite` instance maintains a list of all open pages through the `pages` property.
+
+```python
+# Get a list of all open pages
+open_pages = client.pages
+```
+
+The `pages` property returns a list of all active `Page` instances managed by the `Dendrite` client.
+
+### Performing Actions on Specific Pages
+
+To perform actions on a specific page, use methods on the `Page` class rather than the `Dendrite` class. This ensures that the interaction occurs on the intended page.
+
+**Example: Interacting with Multiple Pages**
+
+```python
+from dendrite_sdk import Dendrite
+
+with Dendrite() as client:
+    # Open multiple URLs in new tabs
+    page1 = client.goto("https://www.example.com", new_page=True)
+    page2 = client.goto("https://www.anotherexample.com", new_page=True)
+
+    # Perform actions on page1
+    page1.click("Sign up button")
+    page1.fill("Email input", value="user@example.com")
+
+    # Perform actions on page2
+    page2.click("Contact us link")
+    page2.fill("Message textarea", value="Hello, I have a question.")
+
+    # Close page1
+    page1.close()
+```
+
+In this example, two different websites are opened in separate tabs and are managed using the methods on their respective `Page` instances.

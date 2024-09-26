@@ -1,0 +1,33 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### extract
+
+Extract data from the active page based on a prompt and optional type specification.
+
+**Usage**
+
+```python
+
+class Article(BaseModel):
+  title: str
+  content: str
+  author: str
+  published_at: Optional[datetime] = None
+  views: Optional[int] = 0
+
+article = client.extract("The article information", type_spec=Article)
+print(article.title)
+
+```
+
+**Arguments**
+
+- `prompt` (str, optional): The prompt to guide the extraction.
+- `type_spec` ([TypeSpec](/sdk-reference/python/types/type-spec), optional): The type specification for the extracted data.
+- `use_cache` (bool, optional): Whether to use cached results. Defaults to True.
+
+**Returns**
+
+[TypeSpec](/sdk-reference/python/types/type-spec) | Any: The response data as the specified type. Defaults to Any.
+
+<InfoSnippet />

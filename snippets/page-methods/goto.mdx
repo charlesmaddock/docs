@@ -1,0 +1,24 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### goto
+
+Navigates the page to the specified URL, optionally in a new tab.
+
+**Usage**
+
+```python
+page = client.goto("https://example.com", expected_page="Feed of example articles")
+```
+
+**Arguments**
+
+- `url` (str): The URL to navigate to.
+- `new_page` (bool, optional): Whether to open the URL in a new page. Defaults to False.
+- `timeout` (float, optional): The maximum time (in milliseconds) to wait for the page to load. Defaults to 15000.
+- `expected_page` (str, optional): A description of the expected page type for verification at runtime. Defaults to an empty string.
+
+**Returns**
+
+- [Page](/sdk-reference/python/page): The page object after navigation.
+
+<InfoSnippet />

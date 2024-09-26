@@ -1,0 +1,38 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### ask
+
+Asks a question about the active page and processes the response based on the specified type.
+
+**Usage**
+
+```python
+
+class Conversation(BaseModel):
+  username: str
+  unread_messages: int
+
+signed_in = client.ask("Is this a signed in dashboard?", type_spec=bool)
+
+if signed_in:
+  conversation = client.ask(
+      "Which conversation has most unread emails", type_spec=Conversation
+  )
+  print(conversation.username)
+
+```
+
+**Arguments**
+
+- `prompt` (str): The question or prompt to be asked.
+- `type_spec` ([TypeSpec](/sdk-reference/python/types/type-spec), optional): The expected return type, which can be a type or a schema. Defaults to None.
+
+**Returns**
+
+[TypeSpec](/sdk-reference/python/types/type-spec) | Any: The response data as the specified type. Defaults to Any.
+
+**Raises**
+
+`DendriteException`: If the request fails, the exception includes the failure message and a screenshot.
+
+<InfoSnippet />

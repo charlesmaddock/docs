@@ -1,0 +1,150 @@
+---
+title: Data Extraction
+description: "Extracting data and drawing context-dependent conclusions from websites"
+---
+
+## Extraction basics
+
+Dendrite supports structured data extraction for any website using natural language, making it ideal for LLMs and AI agents. This is based on our agents that write scripts for extracting data based on the prompt it's given. There are different methods that are specialized on different use cases:
+
+- `extract` is ideal for high volume extraction from predictable page structures where content remains static
+- `ask` is ideal for dynamic content or context-sensitive data extraction where the page structure might be unpredictable
+
+## Extract method
+
+The `extract` method is made for predictable extraction where one or several subpages (like blog articles) will be mapped on a regular basis. It utilizes caching of successful scripts, making it ideal for repeat use. [More about caching](/concepts/caching).
+
+### Simple example
+
+```python
+from dendrite_sdk import Dendrite
+
+# Initiate Dendrite instance
+with Dendrite() as client:
+
+  # Navigate and interact with search field
+  client.goto("https://www.ycombinator.com/companies")
+  client.fill("Search field", value="AI agent")
+  client.press("Enter")
+
+  # Extract startups with natural language description
+  startups = client.extract(
+    "All companies. Return a list of dicts with name, location, description and url"
+  )
+
+  print(startups)
+
+```
+
+### Example with typing
+
+In this example, we extract all AI agent companies in the YC startup directory. We use a Pydantic model to get a typed response.
+
+```python
+from dendrite_sdk import Dendrite
+from pydantic import BaseModel
+
+# Define Pydantic models
+class Startup(BaseModel):
+  name: str
+  location: str
+  description: str
+  url: str
+
+class Startups(BaseModel):
+  items: list[Startup]
+
+# Initiate Dendrite instance
+with Dendrite() as client:
+
+  # Navigate and interact with search field
+  client.goto("https://www.ycombinator.com/companies")
+  client.fill("Search field", value="AI agent")
+  client.press("Enter")
+
+  # Extract startups with structured output with Pydantic model
+  startups = client.extract("", Startups)
+
+  print(startups.items)
+
+```
+
+<Info>
+  The `extract` method exists on the `Page` and `Dendrite` classes. If invoked
+  from a `Dendrite` instance, as above, it is performed on the _active_ page
+</Info>
+
+## Asking quesions about the page
+
+The `ask` method allows you to ask questions about a page and get a structured output. It doesn't write any scripts, it's an agent that always uses the full context of the page to decide the return value. It has access to the page both through its source code and through computer vision. So you can ask any question that a human would be able to answer after taking a look at the page, and more.
+
+For certain tasks where the page is more dynamic, the `ask` is more helpful for structured data extraction that the `extract` method. For those use cases, `ask` support Pydantic models and JsonSchemas as type specification.
+
+### Example with Page Validation
+
+In this example, we're asking the agent if there are any unread emails in the inbox and proceeding differently depending on the outcome.
+
+```python
+from dendrite_sdk import Dendrite
+
+# Initiate Dendrite instance
+with Dendrite(auth=["mail.google.com"]) as client:
+
+  # Navigate and wait for loading
+  client.goto("https://mail.google.com/", expected_page="Email inbox")
+
+  # Ask agent about the state of the page
+  has_new_emails = client.ask(
+      "Do I have any unread emails in my inbox?", type_spec=bool
+  )
+
+  # Handle unread emails if there are any
+  if has_new_emails:
+    print("There are unread emails in inbox")
+  else:
+    print("No unread emails in inbox")
+```
+
+### Example with Data Extraction
+
+In this example, we're extracting the latest posts sent as DM to the user through Instagram. This is a perfect use case for `ask`, since the conversation will be dynamic with:
+
+1. messages sent to and from the current user
+2. a mix of plain text messages and shared posts
+
+```python
+from dendrite_sdk import Dendrite
+from pydantic import BaseModel
+
+# Define Pydantic models
+class Post(BaseModel):
+  title: str
+  url: str
+  date_sent: str
+
+class Posts(BaseModel):
+  items: list[Post]
+
+# Initiate Dendrite instance
+with Dendrite(auth=["instagram.com"]) as client:
+
+  # Navigate to latest conversation
+  client.goto(
+    "https://www.instagram.com/direct/inbox/",
+    expected_page="Instagram DM inbox"
+  )
+  client.click("Conversation at the top of the the sidebar")
+
+  # Get shared posts
+  posts = client.ask(
+    "Extract the posts sent to me in this conversation",
+    type_spec: Posts
+  )
+
+  print(posts.items)
+```
+
+<Info>
+  The `ask` method exists on the `Page` and `Dendrite` classes. If invoked from
+  a `Dendrite` instance, as above, it is performed on the _active_ page
+</Info>

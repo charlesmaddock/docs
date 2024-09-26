@@ -1,102 +1,106 @@
 ---
-title: "Dendrite Browser"
+title: "Dendrite"
 description: "Manage browser instances and interact with web pages using natural language"
 ---
 
-The `DendriteBrowser` class manages a browser instance using Playwright, allowing interactions with web pages using natural language. It handles initialization with API keys, manages browser contexts, and provides methods for navigation, authentication, and other browser-related tasks.
+import GoTo from "/snippets/page-methods/goto.mdx";
+import Click from "/snippets/page-methods/click.mdx";
+import Fill from "/snippets/page-methods/fill.mdx";
+import FillFields from "/snippets/page-methods/fill-fields.mdx";
+import Extract from "/snippets/page-methods/extract.mdx";
+import Ask from "/snippets/page-methods/ask.mdx";
+import WaitFor from "/snippets/page-methods/wait-for.mdx";
+import Press from "/snippets/page-methods/press.mdx";
+
+The `Dendrite` class manages a browser instance using Playwright, allowing interactions with web pages using natural language. It handles initialization with API keys, manages browser contexts, and provides methods for navigation, authentication, and other browser-related tasks.
+
+Initializing it starts a new browser instance.
 
 ## Initialization
 
 ```python
-from dendrite_sdk import DendriteBrowser
+from dendrite_sdk import Dendrite
 
-browser = DendriteBrowser(
-    openai_api_key="your_openai_api_key",
-    anthropic_api_key="your_anthropic_api_key",
-    dendrite_api_key="your_dendrite_api_key",
-    playwright_options={"headless": False, "args": ["--start-maximized"]}
-)
+with Dendrite(
+  dendrite_api_key="your_dendrite_api_key",
+) as client:
+  # Perform actions in the browser
+  ...
 ```
 
+## Properties
+
+### pages
+
+Retrieves the list of active pages managed by the PageManager.
+
+**Usage**
+
+```python
+pages = client.pages
+```
+
+**Returns**
+
+List[[Page](/sdk-reference/python/page)]: The list of active pages in the browser instance.
+
+**Arguments**
+
+- `dendrite_api_key` (str, optional): will default to env variable `DENDRITE_API_KEY`
+- `playwright_options` (Any, optional): Options for configuring Playwright. Defaults to running in non-headless mode with stealth arguments.
+
 ## Methods
+
+<GoTo />
+<Click />
+<Fill />
+<FillFields />
+<Extract />
+<Ask />
+<WaitFor />
+<Press />
 
 ### get_active_page
 
 Retrieves the currently active page managed by the PageManager.
 
-#### Usage
+**Usage**
 
 ```python
-active_page = await browser.get_active_page()
+active_page = client.get_active_page()
 ```
 
-#### Returns
+**Returns**
 
-- `DendritePage`: The active page object.
-
-### goto
-
-Navigates to the specified URL, optionally in a new tab.
-
-#### Usage
-
-```python
-page = await browser.goto("https://example.com", new_page=True, timeout=30000)
-```
-
-#### Parameters
-
-- `url` (str): The URL to navigate to.
-- `new_page` (bool, optional): Whether to open the URL in a new page. Defaults to False.
-- `timeout` (Optional[float], optional): The maximum time (in milliseconds) to wait for the page to load. Defaults to 15000.
-- `expected_page` (str, optional): A description of the expected page type for verification. Defaults to an empty string.
-
-#### Returns
-
-- `DendritePage`: The page object after navigation.
-
-### authenticate
-
-Authenticates the browser for the specified domains.
-
-#### Usage
-
-```python
-await browser.authenticate(["example.com", "subdomain.example.com"])
-```
-
-#### Parameters
-
-- `domains` (Union[str, list[str]]): A domain or list of domains to authenticate.
+- `Page`: The active page object.
 
 ### new_page
 
 Opens a new page in the browser.
 
-#### Usage
+**Usage**
 
 ```python
-new_page = await browser.new_page()
+new_page = client.new_page()
 ```
 
-#### Returns
+**Returns**
 
-- `DendritePage`: The newly opened page.
+- `Page`: The newly opened page.
 
 ### add_cookies
 
 Adds cookies to the current browser context.
 
-#### Usage
+**Usage**
 
 ```python
 cookies = [
     {"name": "session_id", "value": "123456", "domain": "example.com"}
-]
-await browser.add_cookies(cookies)
+] client.add_cookies(cookies)
 ```
 
-#### Parameters
+**Arguments**
 
 - `cookies` (List[Dict[str, Any]]): A list of cookies to be added to the browser context.
 
@@ -104,20 +108,10 @@ await browser.add_cookies(cookies)
 
 Closes the browser and uploads authentication session data if available.
 
-#### Usage
+**Usage**
 
 ```python
-await browser.close()
-```
-
-## Context Manager
-
-The `DendriteBrowser` can be used as a context manager:
-
-```python
-async with DendriteBrowser() as browser:
-    page = await browser.goto("https://example.com")
-    # Perform actions with the browser
+client.close()
 ```
 
 This ensures that the browser is properly closed when you're done using it.

@@ -1,9 +1,9 @@
 ---
-title: "Dendrite Element"
+title: "Element"
 description: "Interact with web elements using natural language"
 ---
 
-The `DendriteElement` class represents an element in the Dendrite browser environment. It wraps a Playwright Locator and provides methods for interacting with and manipulating elements in the browser.
+The `Element` class represents an element in the Dendrite browser environment. It wraps a Playwright Locator and provides methods for interacting with and manipulating elements in the browser.
 
 ## Methods
 
@@ -45,7 +45,7 @@ Clicks the element.
 await element.click(expected_outcome="The dropdown menu should open")
 ```
 
-#### Parameters
+#### Arguments
 
 - `expected_outcome` (Optional[str]): The expected outcome of the click action.
 - `*args`: Additional positional arguments.
@@ -65,7 +65,7 @@ Fills the element with a value.
 await element.fill("John Doe", expected_outcome="The input field should contain the entered name")
 ```
 
-#### Parameters
+#### Arguments
 
 - `value` (str): The value to fill the element with.
 - `expected_outcome` (Optional[str]): The expected outcome of the fill action.
@@ -86,7 +86,7 @@ Hovers over the element.
 await element.hover(expected_outcome="A tooltip should appear")
 ```
 
-#### Parameters
+#### Arguments
 
 - `expected_outcome` (Optional[str]): The expected outcome of the hover action.
 - `*args`: Additional positional arguments.

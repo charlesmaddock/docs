@@ -1,0 +1,30 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### press
+
+Presses a keyboard key on the active page, optionally with modifier keys.
+
+**Usage**
+
+```python
+client.fill("Search field", value="AI agents")
+client.press("Enter")
+```
+
+**Arguments**
+
+- `key` (str): The main key to be pressed.
+- `hold_shift` (bool, optional): Whether to hold the Shift key. Defaults to False.
+- `hold_ctrl` (bool, optional): Whether to hold the Control key. Defaults to False.
+- `hold_alt` (bool, optional): Whether to hold the Alt key. Defaults to False.
+- `hold_cmd` (bool, optional): Whether to hold the Command key (Meta on some systems). Defaults to False.
+
+**Returns**
+
+`None`
+
+**Raises**
+
+`DendriteException` if key press fails
+
+<InfoSnippet />

@@ -1,0 +1,29 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### fill_fields
+
+Fills multiple fields on the active page with the provided values.
+
+This method iterates through the given dictionary of fields and their corresponding values,
+making a separate fill request for each key-value pair.
+
+**Usage**
+
+```python
+client.fill_fields({
+  "First name": "John",
+  "Last name:": "Doe",
+  "Age": 36,
+  "Occupation": "Firefighter"
+})
+```
+
+**Paramaters**
+
+`fields` (Dict[str, Any]): A dictionary where each key is a field identifier (e.g., a prompt or selector) and each value is the content to fill in that field.
+
+**Returns**
+
+`None`
+
+<InfoSnippet />

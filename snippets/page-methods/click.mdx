@@ -1,0 +1,25 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### click
+
+Clicks an element on the active page based on the provided prompt.
+
+**Usage**
+
+```python
+client.click("Search button in navbar")
+```
+
+**Arguments**
+
+- `prompt` (str): The prompt describing the element to be clicked.
+- `expected_outcome` (str, optional): The expected outcome of the click action.
+- `use_cache` (bool, optional): Whether to use cached results for element retrieval. Defaults to True.
+- `timeout` (int, optional): The timeout (in milliseconds) for the click operation. Defaults to 15000.
+- `force` (bool, optional): Whether to force the click operation. Defaults to False.
+
+**Returns**
+
+`InteractionResponse`
+
+<InfoSnippet />

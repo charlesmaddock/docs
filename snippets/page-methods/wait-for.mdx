@@ -1,0 +1,32 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### wait_for
+
+Waits for the condition specified in the prompt to become true by periodically checking the page content.
+
+This method retrieves the page information and evaluates whether the specified condition (provided in the prompt) is met. It continues to retry until the total elapsed time exceeds the timeout.
+
+**Usage**
+
+```python
+try:
+  client.wait_for("Loading to complete", timeout=10000)
+  # continue with page interactions
+except PageConditionNotMet as e:
+  print(f"Condition was not met before timeout: {e.message}")
+```
+
+**Arguments**
+
+- `prompt` (str): The prompt to determine the condition to wait for on the page.
+- `timeout` (float, optional): The maximum time (in milliseconds) to wait for the condition. Defaults to 30000.
+
+**Returns**
+
+`True` if condition is met before timeout.
+
+**Raises**
+
+`PageConditionNotMet` if condition is not met before timeout
+
+<InfoSnippet />

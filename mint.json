@@ -46,27 +46,34 @@
   "navigation": [
     {
       "group": "",
-      "pages": ["introduction", "getting-started","remote-browser"]
+      "pages": ["introduction", "getting-started"]
     },
     {
-      "group": "Examples",
+      "group": "Concepts",
       "pages": [
-        "examples/google-search",
-        "examples/authentication-instagram",
-        "examples/outlook"
+        "concepts/navigation",
+        "concepts/interactions",
+        "concepts/extraction",
+        "concepts/authentication",
+        "concepts/caching",
+        "concepts/remote-browser"
       ]
-    },
-    {
-      "group": "Agent Examples",
-      "pages": ["agents/cooking-agent", "agents/banking-agent"]
     },
     {
       "group": "SDK Reference",
       "pages": [
-        "sdk-reference/python/browser", 
+        "sdk-reference/python/browser",
         "sdk-reference/python/page",
-        "sdk-reference/python/element"
-        ]
+        "sdk-reference/python/element",
+        {
+          "group": "Types",
+          "pages": ["sdk-reference/python/types/type-spec"]
+        }
+      ]
+    },
+    {
+      "group": "Examples",
+      "pages": ["examples/google-search", "examples/outlook"]
     }
   ],
   "footerSocials": {

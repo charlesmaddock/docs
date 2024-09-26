@@ -1,11 +1,9 @@
 ---
 title: Authentication
 description: "How to authenticate on any website using Dendrite Vault"
-icon: "lock"
 ---
 
-
-Our Chrome extension, **Dendrite Vault**, enables you to securely share your website permissions with your AI agent, mirroring the access you have in your local browser.
+Our Chrome extension, **Dendrite Vault**, enables you to securely share your website sessions with your AI agent, mirroring the access you have in your local browser.
 
 <Steps>
   <Step title="Download the extension">
@@ -17,69 +15,60 @@ Our Chrome extension, **Dendrite Vault**, enables you to securely share your web
     extension icon and press **Save authentication session**
   </Step>
   <Step title="Authenticate in Script">
-    Once your session has been saved, you can add it to your dendrite script
+    Once your session has been saved, you can add it to your dendrite browser session
     with:
 
     ```python
-    browser.authenticate("domain.com")
+    DendriteBrowser(auth=["domain.com"])
     ```
 
   </Step>
 </Steps>
 
-
 ## Install and Activate Extension
 
 Download the Dendrite Vault [here](https://chromewebstore.google.com/detail/faflkoombjlhkgieldilpijjnblgabnn?hl=en&authuser=0).
 
-
-
 You'll be prompted to log in to your Dendrite account.
 
-Once you've logged in, simple use the extension by pressing the icon in the top right corner of your browser.
+Once you've logged in, simply use the extension by pressing the icon in the top right corner of your browser.
 
 ![Extension Dashboard](images/auth-use-plugin.png)
 
-
-## Authenticating on Instagram
+## Example: Authenticating on Instagram
 
 To log in to instagram with your agent your need to:
 
 <Steps>
-  <Step title="Log Into Instagram in your Browser">
+  <Step title="Log in to Instagram in your Local Browser">
   </Step>
   <Step title="Save your Authentication Session">
     Open the Dendrite Vault extension and save your session on Instagram in your browser.
     ![Instagram Dendrite Vault Examples](images/instagram-example.png)    
   </Step>
-  <Step title="Use the Authenticate Function">
-    Use the `authenticate` function in a script, like in the example below:
+  <Step title="Use with DendriteBrowser">
+    Initiate your DendriteBrowser with an authenticated session.
+
+    ```python auth_example.py
+    # Initiate browser with instagram session
+    with DendriteBrowser(auth=["instagram.com"]) as client:
+      # Go to website with authenticated session
+      client.goto(
+        "https://instagram.com",
+        expected_page="Logged in version of Instagram feed"
+      )
+    ```
+
   </Step>
 </Steps>
 
-
-
-```python auth_example.py
-import asyncio
-from dendrite_sdk import DendriteBrowser
-
-
-async def authenticate_on_instagram():
-    dendrite_browser = DendriteBrowser()
-    await dendrite_browser.authenticate("instagram.com")
-    page = await dendrite_browser.goto(
-        "https://instagram.com",
-        expected_page="You should be logged in with the instagram feed visible",
-    )
-    res = await page.ask("Describe the first post in my feed")
-    print("First post description: ", res)
-
-
-asyncio.run(authenticate_on_instagram())
-```
-
 ## Let's scale up
 
-<Card title="Remote Browser" icon="arrow-trend-up" href="/examples/remote-browser">
+<Card
+  title="Remote Browser"
+  icon="arrow-trend-up"
+  href="/examples/remote-browser"
+>
   Use a remote browser to run web automations in the cloud
 </Card>
+```
