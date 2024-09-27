@@ -1,0 +1,23 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### upload_files
+
+Uploads files to the page using a file chooser.
+
+**Usage**
+
+```python
+client.upload_files("")
+```
+
+**Arguments**
+
+- `files` (Union[str, pathlib.Path, FilePayload, Sequence[Union[str, pathlib.Path]], Sequence[FilePayload]]): The file(s) to be uploaded.
+  This can be a file path, a `FilePayload` object, or a sequence of file paths or `FilePayload` objects.
+- `timeout` (float, optional): The maximum amount of time (in milliseconds) to wait for the file chooser to be ready. Defaults to 30000.
+
+**Returns**
+
+- `None`
+
+<InfoSnippet />

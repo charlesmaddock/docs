@@ -1,6 +1,7 @@
 ---
 title: Interactions
 description: "Interacting and performing actions on websites"
+icon: arrow-pointer
 ---
 
 ## Interaction basics
@@ -36,21 +37,21 @@ from dendrite_sdk import Dendrite
 
 def send_email(to, subject, message):
   # Initiate Dendrite instance and authenticate
-  with Dendrite(auth=["mail.google.com"]) as client:
+  client = Dendrite(auth=["mail.google.com"])
 
-    # Navigate and check for successful authentication
-    client.goto("https://mail.google.com/", expected_page="Gmail inbox")
+  # Navigate and check for successful authentication
+  client.goto("https://mail.google.com/", expected_page="Gmail inbox")
 
-    # Create a new email and populate fields
-    client.click("New email draft button")
-    client.fill_fields({
-      "Recipient": to,
-      "Subject": subject,
-      "Message": message
-    })
+  # Create a new email and populate fields
+  client.click("New email draft button")
+  client.fill_fields({
+    "Recipient": to,
+    "Subject": subject,
+    "Message": message
+  })
 
-    # Send email
-    client.click("The button for sending the email")
+  # Send email
+  client.click("The button for sending the email")
 
 send_email(
   "john@doe.com",

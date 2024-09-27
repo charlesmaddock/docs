@@ -4,6 +4,7 @@ description: "Manage browser instances and interact with web pages using natural
 ---
 
 import GoTo from "/snippets/page-methods/goto.mdx";
+import NewTab from "/snippets/page-methods/new-tab.mdx";
 import Click from "/snippets/page-methods/click.mdx";
 import Fill from "/snippets/page-methods/fill.mdx";
 import FillFields from "/snippets/page-methods/fill-fields.mdx";
@@ -11,6 +12,8 @@ import Extract from "/snippets/page-methods/extract.mdx";
 import Ask from "/snippets/page-methods/ask.mdx";
 import WaitFor from "/snippets/page-methods/wait-for.mdx";
 import Press from "/snippets/page-methods/press.mdx";
+import UploadFiles from "/snippets/page-methods/upload-files.mdx";
+import GetDownload from "/snippets/page-methods/get-download.mdx";
 
 The `Dendrite` class manages a browser instance using Playwright, allowing interactions with web pages using natural language. It handles initialization with API keys, manages browser contexts, and provides methods for navigation, authentication, and other browser-related tasks.
 
@@ -21,12 +24,16 @@ Initializing it starts a new browser instance.
 ```python
 from dendrite_sdk import Dendrite
 
-with Dendrite(
-  dendrite_api_key="your_dendrite_api_key",
-) as client:
-  # Perform actions in the browser
-  ...
+client = Dendrite(dendrite_api_key="your_dendrite_api_key")
+# Perform actions in the browser
+...
 ```
+
+**Arguments**
+
+- `dendrite_api_key` (str, optional): will default to env variable `DENDRITE_API_KEY`
+- `auth` (str | list[str], optional): Domains to authenticate on. [Read more](/concepts/authentication)
+- `playwright_options` (Any, optional): Options for configuring Playwright. Defaults to running in non-headless mode with stealth arguments.
 
 ## Properties
 
@@ -44,14 +51,10 @@ pages = client.pages
 
 List[[Page](/sdk-reference/python/page)]: The list of active pages in the browser instance.
 
-**Arguments**
-
-- `dendrite_api_key` (str, optional): will default to env variable `DENDRITE_API_KEY`
-- `playwright_options` (Any, optional): Options for configuring Playwright. Defaults to running in non-headless mode with stealth arguments.
-
 ## Methods
 
 <GoTo />
+<NewTab />
 <Click />
 <Fill />
 <FillFields />

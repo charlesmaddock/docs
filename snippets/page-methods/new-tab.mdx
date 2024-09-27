@@ -1,0 +1,26 @@
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### new_tab
+
+Opens a new tab and navigates to the specified URL.
+
+**Usage**
+
+```python
+page = client.new_tab("https://example.com", expected_page="Feed of example articles")
+```
+
+**Arguments**
+
+- `url` (str): The URL to navigate to.
+- `timeout` (float, optional): The maximum time (in milliseconds) to wait for the page to load. Defaults to 15000.
+- `expected_page` (str, optional): A description of the expected page type for verification at runtime. Defaults to an empty string.
+  **Returns**
+
+`InteractionResponse`: The response from the interaction.
+
+**Raises**
+
+`DendriteException`: If no suitable element is found or if the fill operation fails.
+
+<InfoSnippet />

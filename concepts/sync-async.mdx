@@ -1,0 +1,103 @@
+---
+title: Sync/Async
+description: Dendrite supports both Sync and Async
+---
+
+## Introduction
+
+The Dendrite SDK is designed to be synchronous by default, providing a simple, easy-to-use interface for most scenarios. However, it also includes asynchronous support for tasks that would benefit from concurrency, such as handling high-volume I/O operations or multiple API calls at once.
+
+## When to Use Async
+
+Asynchronous programming allows you to handle multiple tasks concurrently without blocking the execution of other code. While synchronous programming works well in most cases, async can offer significant performance improvements in specific scenarios. The main use case for the asynchronous Dendrite client is for cases with parallell execution, some examples are:
+
+- Performing actions on multiple pages that do not need to happen in order
+- Extracting data from multiple pages with the same structured output
+- Long tasks where you want to let your agent continue with other tasks while waiting for execution
+
+## How to Use Async
+
+To use the asynchronous Dendrite client, just import `AsyncDendrite` from `dendrite_sdk.async_api` and use it just like you would use the `Dendrite` class. It has all the same methods and all classes that stem from it will also be Async, like `AsyncPage`.
+
+### Simple Example
+
+```python
+import asyncio
+from dendrite_sdk.async_api import AsyncDendrite
+
+async def main():
+  # Initiate async Dendrite client
+  client = AsyncDendrite()
+
+  # Navigate to page click on the described button
+  await client.goto("https://example.com")
+  await client.click("The button for getting started")s
+
+asyncio.run(main())
+```
+
+### Example With Concurrency
+
+In this example we will go to the YC startup directory, extract the urls of all AI agent companies, and extract data from all those companies.
+
+```python
+import asyncio
+from pydantic import BaseModel
+from dendrite_sdk.async_api import AsyncDendrite
+
+# Define Pydantic Models for data extraction
+class Founder(BaseModel):
+  name: str
+  linkedin: str | None
+  twitter: str | None
+
+class Company(BaseModel):
+  name: str
+  team_size: int
+  location: str
+  website_url: str
+  founders: list[Founder]
+
+
+# Extract company info function
+async def extract_info(client, url):
+  # Open the URL in a new tab and extract company info
+  page = await client.new_tab(url)
+  company_info = await client.extract("The company info", type_spec=Company)
+
+  # Close tab and return info
+  await page.close()
+  return company_info
+
+
+# Main function (asynchronous)
+async def main():
+  # Initiate async Dendrite client
+  client = AsyncDendrite(dendrite_api_key=DENDRITE_API_KEY)
+
+  # Go to YC and search for AI agent companies
+  await client.goto("https://ycombinator.com/companies")
+  await client.fill("Search field", value="AI agent")
+
+  # Extract the urls of the resulting list
+  urls = await client.extract(
+      "The URLs of each listed startup. Return this format: list[str]"
+  )
+
+  # Go to each URL concurrently in different tabs and extract company info
+  tasks = [extract_info(client, url) for url in urls]
+  companies = await asyncio.gather(*tasks)
+
+  # Do something with the extracted company info
+  print(companies)
+
+
+asyncio.run(main())
+```
+
+This example is a perfect use of async, since execution would take much longer if the data extraction happened one page at a time.
+
+### Considerations
+
+- **Event Loop:** Asynchronous code must run within an event loop, which manages the execution of tasks. The built-in `asyncio` library makes this straightforward in Python.
+- **Mixing Sync and Async:** Be cautious when mixing synchronous and asynchronous code. It can add complexity and require proper structuring to avoid potential deadlocks or performance degradation.

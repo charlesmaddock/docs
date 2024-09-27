@@ -35,7 +35,7 @@ DENDRITE_API_KEY = "..."
 
 def hello_world():
   # Initate the Dendrite client
-  with Dendrite(dendrite_api_key=DENDRITE_API_KEY) as client:
+  client = Dendrite(dendrite_api_key=DENDRITE_API_KEY)
 
   # Navigate with the `goto` method
   client.goto("https://google.com")

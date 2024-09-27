@@ -1,6 +1,7 @@
 ---
 title: Authentication
 description: "How to authenticate on any website using Dendrite Vault"
+icon: lock
 ---
 
 Our Chrome extension, **Dendrite Vault**, enables you to securely share your website sessions with your AI agent, mirroring the access you have in your local browser.
@@ -51,12 +52,13 @@ To log in to instagram with your agent your need to:
 
     ```python auth_example.py
     # Initiate client with instagram session
-    with Dendrite(auth=["instagram.com"]) as client:
-      # Go to website with authenticated session
-      client.goto(
-        "https://instagram.com",
-        expected_page="Logged in version of Instagram feed"
-      )
+    client = Dendrite(auth="instagram.com")
+
+    # Go to website with authenticated session
+    client.goto(
+      "https://instagram.com",
+      expected_page="Logged in version of Instagram feed"
+    )
     ```
 
   </Step>

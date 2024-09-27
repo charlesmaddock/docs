@@ -49,13 +49,19 @@
       "pages": ["introduction", "getting-started", "examples"]
     },
     {
-      "group": "Concepts",
+      "group": "Core concepts",
       "pages": [
         "concepts/navigation",
         "concepts/interactions",
         "concepts/extraction",
-        "concepts/authentication",
+        "concepts/authentication"
+      ]
+    },
+    {
+      "group": "Deep dive",
+      "pages": [
         "concepts/caching",
+        "concepts/sync-async",
         "concepts/remote-browser"
       ]
     },

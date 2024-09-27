@@ -1,6 +1,7 @@
 ---
 title: Data Extraction
 description: "Extracting data and drawing context-dependent conclusions from websites"
+icon: globe
 ---
 
 ## Extraction basics
@@ -20,19 +21,19 @@ The `extract` method is made for predictable extraction where one or several sub
 from dendrite_sdk import Dendrite
 
 # Initiate Dendrite instance
-with Dendrite() as client:
+client = Dendrite():
 
-  # Navigate and interact with search field
-  client.goto("https://www.ycombinator.com/companies")
-  client.fill("Search field", value="AI agent")
-  client.press("Enter")
+# Navigate and interact with search field
+client.goto("https://www.ycombinator.com/companies")
+client.fill("Search field", value="AI agent")
+client.press("Enter")
 
-  # Extract startups with natural language description
-  startups = client.extract(
-    "All companies. Return a list of dicts with name, location, description and url"
-  )
+# Extract startups with natural language description
+startups = client.extract(
+  "All companies. Return a list of dicts with name, location, description and url"
+)
 
-  print(startups)
+print(startups)
 
 ```
 
@@ -55,17 +56,17 @@ class Startups(BaseModel):
   items: list[Startup]
 
 # Initiate Dendrite instance
-with Dendrite() as client:
+client = Dendrite()
 
-  # Navigate and interact with search field
-  client.goto("https://www.ycombinator.com/companies")
-  client.fill("Search field", value="AI agent")
-  client.press("Enter")
+# Navigate and interact with search field
+client.goto("https://www.ycombinator.com/companies")
+client.fill("Search field", value="AI agent")
+client.press("Enter")
 
-  # Extract startups with structured output with Pydantic model
-  startups = client.extract("", Startups)
+# Extract startups with structured output with Pydantic model
+startups = client.extract("", Startups)
 
-  print(startups.items)
+print(startups.items)
 
 ```
 
@@ -88,21 +89,21 @@ In this example, we're asking the agent if there are any unread emails in the in
 from dendrite_sdk import Dendrite
 
 # Initiate Dendrite instance
-with Dendrite(auth=["mail.google.com"]) as client:
+client = Dendrite(auth=["mail.google.com"])
 
-  # Navigate and wait for loading
-  client.goto("https://mail.google.com/", expected_page="Email inbox")
+# Navigate and wait for loading
+client.goto("https://mail.google.com/", expected_page="Email inbox")
 
-  # Ask agent about the state of the page
-  has_new_emails = client.ask(
-      "Do I have any unread emails in my inbox?", type_spec=bool
-  )
+# Ask agent about the state of the page
+has_new_emails = client.ask(
+    "Do I have any unread emails in my inbox?", type_spec=bool
+)
 
-  # Handle unread emails if there are any
-  if has_new_emails:
-    print("There are unread emails in inbox")
-  else:
-    print("No unread emails in inbox")
+# Handle unread emails if there are any
+if has_new_emails:
+  print("There are unread emails in inbox")
+else:
+  print("No unread emails in inbox")
 ```
 
 ### Example with Data Extraction
@@ -126,22 +127,22 @@ class Posts(BaseModel):
   items: list[Post]
 
 # Initiate Dendrite instance
-with Dendrite(auth=["instagram.com"]) as client:
+client = Dendrite(auth=["instagram.com"])
 
-  # Navigate to latest conversation
-  client.goto(
-    "https://www.instagram.com/direct/inbox/",
-    expected_page="Instagram DM inbox"
-  )
-  client.click("Conversation at the top of the the sidebar")
+# Navigate to latest conversation
+client.goto(
+  "https://www.instagram.com/direct/inbox/",
+  expected_page="Instagram DM inbox"
+)
+client.click("Conversation at the top of the the sidebar")
 
-  # Get shared posts
-  posts = client.ask(
-    "Extract the posts sent to me in this conversation",
-    type_spec: Posts
-  )
+# Get shared posts
+posts = client.ask(
+  "Extract the posts sent to me in this conversation",
+  type_spec: Posts
+)
 
-  print(posts.items)
+print(posts.items)
 ```
 
 <Info>
