@@ -2,10 +2,18 @@ import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
 
 ### get_download
 
+Retrieves the most recent reference to a downloaded file. To actually save the file to the local machine, you need to invoke the `download.save_as` method on the object returned from `get_download`.
+
 **Usage**
 
 ```python
-download = client.get_download()
+# Download the file and get a reference to it
+client.click("Download File")
+download = client.get_download(timeout=5000)
+
+# Save the downloaded file to the suggested location
+download_path = "path/to/file/" + download.suggested_filename
+download.save_as(download_path)
 ```
 
 **Arguments**
@@ -14,6 +22,6 @@ download = client.get_download()
 
 **Returns**
 
-- `None`
+- `Download`
 
 <InfoSnippet />

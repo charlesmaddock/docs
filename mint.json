@@ -66,6 +66,10 @@
       ]
     },
     {
+      "group": "Examples",
+      "pages": ["examples/langchain"]
+    },
+    {
       "group": "SDK Reference",
       "pages": [
         "sdk-reference/python/browser",
@@ -76,10 +80,6 @@
           "pages": ["sdk-reference/python/types/type-spec"]
         }
       ]
-    },
-    {
-      "group": "Examples",
-      "pages": ["examples/google-search", "examples/outlook"]
     }
   ],
   "footerSocials": {

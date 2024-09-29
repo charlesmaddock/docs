@@ -2,12 +2,13 @@ import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
 
 ### upload_files
 
-Uploads files to the page using a file chooser.
+Uploads files to the page using the file chooser.
 
 **Usage**
 
 ```python
-client.upload_files("")
+client.click("Upload file button")
+client.upload_files("path/to/file.png")
 ```
 
 **Arguments**

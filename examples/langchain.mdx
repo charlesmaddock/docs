@@ -1,0 +1,577 @@
+---
+title: LangChain Agent
+description: "A LangChain Agent that can handle your Instagram account"
+---
+
+In this example we're going to create an agent using LangChain and give it web tools made with Dendrite. The web tools will allow the agent to interact with Instagram through the web app, allowing unlimited customizability based on your agent's needs.
+
+The order we're going to do this is:
+
+1. Installing dependencies
+2. Setup and imports
+3. Creating a class for Instagram tools using `Dendrite`
+4. Defining our langchain tools for the agent using our `InstagramTools` class
+5. Creating our agent using **LangChain**
+6. Running the agent in a chat loop between Human and Agent in the console
+
+## Installing Dependencies
+
+We're going to start with installing all necessary packages. First, let's install Dendrite using Poetry:
+
+```
+poetry add dendrite-sdk && poetry run dendrite install
+```
+
+Now let's install the langchain packages we need:
+
+```
+poetry add langchain langgraph langchain_anthropic langchain_core langchain_community
+```
+
+And finally, the remaining packages:
+
+```
+poetry add pydantic requests
+```
+
+## Setup
+
+Now, let's create a python file called `agent.py`. We're going to start by importing all dependencies at the top. Don't worry about their uses, it will become clear later on:
+
+```python agent.py
+import time
+from datetime import datetime
+import os
+from typing import List, Literal
+
+from dendrite_sdk import Dendrite
+
+from pydantic import BaseModel
+import requests
+
+from langchain.tools import tool
+
+from langchain_anthropic import ChatAnthropic
+from langchain_core.messages import HumanMessage, SystemMessage
+from langgraph.checkpoint.memory import MemorySaver
+
+from langchain_community.utilities.dalle_image_generator import DallEAPIWrapper
+from langgraph.prebuilt import create_react_agent
+```
+
+We'll also create a `.env` file for our Dendrite API key, which is used by default by the `Dendrite` client.
+
+```text .env
+DENDRITE_API_KEY=sk...
+```
+
+## Instagram Tooling
+
+Next, we're going to start building our Instagram tools. We are going to create 3 tools for Instagram:
+
+1. Reading DMs
+2. Sending a DM
+3. Posting content
+
+For these, we're going to create a class called `InstagramTools`. The class will manage the Dendrite client and will contain the methods used for the tools metioned above. Let's start with creating the class and initiating Dendrite.
+
+```python agent.py
+class InstagramTools:
+    def __init__(self):
+        self.client = Dendrite(auth="instagram.com")
+```
+
+In the code above, we initiate the Dendrite client with an authenticated session on instagram.com. Read more about authentication [here](/concepts/authentication).
+
+The `Dendrite` class uses our environment variable `DENDRITE_API_KEY` by default.
+
+### Reading and Sending DMs
+
+For our DM related tools, we're going to create a utility function that navigates to the specified DM conversation. Inside the `InstagramTools` class, let's create a `goto_chat` method.
+
+```python agent.py
+    # Inside InstagramTools
+
+    def goto_chat(self, chat_name: str):
+        client = self.client
+
+        # Go to Instagram DM inbox and press button to open a chat
+        client.goto("https://www.instagram.com/direct/inbox/")
+        client.click("Icon button that creates a new chat")
+
+        # Fill chat name in search field and wait for loading to complete
+        client.fill("Input for which user to send the message to", chat_name)
+        time.sleep(3)
+
+        # Select top item and press button to open chat
+        client.press("Tab")
+        client.press("Enter")
+        client.click("Button to open/start a chat in the 'send message' modal")
+```
+
+This method takes in a chat name, and navigates on the Instagram website just like a human would.
+
+Now it's time to build the methods to read and send messages. Inside `InstagramTools` we're creating `send_message_in_chat` and `get_messages_from_chat`, utilizing out `goto_chat` method for navigation.
+
+```python agent.py
+# Outside InstagramTools
+
+class Message(BaseModel):
+    sender: Literal["me", "other"]
+    text: str
+    date: str
+
+class Chat(BaseModel):
+    messages: List[Message]
+```
+
+```python agent.py
+    # Inside InstagramTools
+
+    # Sending messages
+    def send_message_in_chat(self, message: str, chat_name: str):
+        client = self.client
+
+        # Open chat
+        try:
+            self.goto_chat(chat_name)
+        except RuntimeError as e:
+            return str(e)
+
+        # Enter message and send
+        client.fill("The input where the user writes new messages", message)
+        client.press("Enter")
+
+        return f"Message sent in chat with {chat_name}: '{message}'"
+
+    # Retrieving messages
+    def get_messages_from_chat(self, chat_name: str):
+        client = self.client
+
+        # Open chat
+        try:
+            self.goto_chat(chat_name)
+        except RuntimeError as e:
+            return str(e)
+
+        # Extract messages
+        chat: Chat = client.extract(
+            "The latest text messages in the current conversation. Skip any type of shared content.",
+            type_spec=Chat,
+        )
+
+        return chat.messages
+```
+
+First we're create the Pydantic models passed in to the `extract` method for structured data output. Then, we utilize the `fill` and `press` methods to send messages, and the `extract` method to extract messages.
+
+### Posting Content
+
+Our last Instagram tool is for posting content. We will implement it using simple navigation and page interactions from the Dendrite SDK and using the `upload_content` method. This tool takes in the caption and image path as an argument. Later, we will create a utility function that generates an image with Dall-E and saves it locally.
+
+```python agent.py
+    # Inside InstagramTools
+
+    def post_content(self, text: str, image_path: str):
+        client = self.client
+
+        # Go to Instagram and click button for creating a post
+        client.goto("https://www.instagram.com/")
+        client.wait_for("Loading to finish")
+        client.click(
+            "Button in side bar menu that creates a new post",
+            expected_outcome="A modal for creating a new post should appear",
+        )
+
+        # Upload image
+        client.click(
+            "Button in the 'Create new post' modal for selecting upload content from the computer"
+        )
+        client.upload_files(image_path)
+        client.wait_for(
+            "Image to be added to the modal and the crop interface to appear"
+        )
+
+        # Press next until caption input field appears
+        next_btn = client.get_element("Next step button in modal")
+        next_btn.click(expected_outcome="Side bar with filters appears")
+        next_btn.click(expected_outcome="Side bar with a caption input field appears")
+
+        # Fill in caption
+        client.fill("Caption input field for the new post", text)
+
+        client.click("The button for sharing the new post")
+        client.wait_for("Success modal that indicates that the post has been shared")
+
+        return f"Image has been posted with caption: {text}"
+```
+
+## Creating our LangChain Agent
+
+Now it's time to pass our web tools to a LangChain agent. For this, we're going to create a main function and initialize the InstagramTools class. We'll also create a util function for generating a config object for out agent.
+
+```python agent.py
+def main():
+    global config
+
+    # Get Instagram Tools
+    ig_tools = InstagramTools()
+
+    # Util function for generating config for agent
+    generate_config = lambda thread_id=None: {
+        "configurable": {
+            "thread_id": thread_id or datetime.now().strftime("%Y%m%d_%H%M%S")
+        }
+    }
+```
+
+The next step is to define the tools for the agent using the @tool decorator from LangChain. We're also creating a quick function for generating an image with Dall-E, which can be used to generate an image for our `upload_post` tool.
+
+```python agent.py
+    # Inside main
+
+    # Create tools for agent
+    @tool
+    def get_messages(user_name: str):
+        """Get latest instagram messages from a chat with a specific user based on their username"""
+        return ig_tools.get_messages_from_chat(user_name)
+
+    @tool
+    def send_message(message: str, user_name: str):
+        """Send a direct Instagram message to a specific user based on their username.
+        IMPORTANT: Only use this tool after explicitly asking the user for the message content and receiving their approval.
+        """
+        return ig_tools.send_message_in_chat(message, user_name)
+
+    @tool
+    def upload_post(caption: str, image_url: str):
+        """Upload a post to the user's Instagram account."""
+
+        image_path = download_image(image_url)
+
+        return ig_tools.post_content(caption, image_path)
+
+    @tool
+    def generate_image(prompt: str):
+        """Generate an image from a prompt and return the URL to the user.
+        IMPORTANT: If the prompt from the user is not very descriptive, write a new, more detailed prompt based on the user input that you use to invoke this tool.
+        """
+
+        url = DallEAPIWrapper(model="dall-e-3").run(prompt)
+
+        return url
+
+    # Util function for saving image locally from url
+    def download_image(url):
+        directory = "test/saved_images"
+        os.makedirs(directory, exist_ok=True)
+
+        response = requests.get(url)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"image_{timestamp}.png"
+
+        print("Response code for image: ", response.status_code)
+
+        if response.status_code == 200:
+            filepath = os.path.join(directory, filename)
+
+            with open(filepath, "wb") as file:
+                file.write(response.content)
+
+            return filepath
+        else:
+            raise RuntimeError("Failed to download image")
+```
+
+Great, now it's time to actually create the agent, configure it and pass our tools to it!
+
+```python agent.py
+    # Inside main
+
+    # Create the agent with Memory, Model, System Prompt and Tools
+    memory = MemorySaver()
+    model = ChatAnthropic(model_name="claude-3-sonnet-20240229")
+    system_prompt = SystemMessage(
+        content="""You are a helpful AI Agent called 'Igor the AI Agent' developed by Dendrite that is specialized in doing Instagram actions on behalf of the user.
+    You have been provided tools to do this reliably.
+    """
+    )
+    tools = [
+        get_messages,
+        send_message,
+        generate_image,
+        upload_post,
+    ]
+
+    # Initiate ReAct Agent
+    agent_executor = create_react_agent(
+        model, tools, checkpointer=memory, state_modifier=system_prompt
+    )
+```
+
+Now that we have our agent_executor, the last step is to run it in a loop where the human writes a message and the answer from the agent is streamed to the console.
+
+```python agent.py
+    # Inside main
+
+    # Utils
+    config = generate_config()
+    separator = "-------"
+
+    # Create chat loop between Human and Agent in console
+    while True:
+
+        # Get human message input
+        user_input = input("User: ")
+        print(separator)
+        if user_input.lower() in ["quit", "exit", "q"]:
+            print("Goodbye!")
+            break
+
+        # Add new human message to agent and stream response
+        for event in agent_executor.stream(
+            {"messages": [HumanMessage(content=user_input)]}, config
+        ):
+            for value in event.values():
+                print("Assistant:", value["messages"][-1].content)
+                print(separator)
+```
+
+Finally, simply call the `main` function
+
+```python agent.py
+main()
+```
+
+## Final Result
+
+Et voilà! A fully functioning Instagram agent built with LangChain and Dendrite.
+
+```python agent.py
+import time
+from datetime import datetime
+import os
+from typing import List, Literal
+
+from dendrite_sdk import Dendrite
+
+from pydantic import BaseModel
+import requests
+
+from langchain.tools import tool
+
+from langchain_anthropic import ChatAnthropic
+from langchain_core.messages import HumanMessage, SystemMessage
+from langgraph.checkpoint.memory import MemorySaver
+
+from langchain_community.utilities.dalle_image_generator import DallEAPIWrapper
+from langgraph.prebuilt import create_react_agent
+
+class Message(BaseModel):
+    sender: Literal["me", "other"]
+    text: str
+    date: str
+
+class Chat(BaseModel):
+    messages: List[Message]
+
+
+class InstagramTools:
+    def __init__(self):
+        self.client = Dendrite(auth="instagram.com")
+
+    def goto_chat(self, chat_name: str):
+        client = self.client
+
+        # Go to Instagram DM inbox and press button to open a chat
+        client.goto("https://www.instagram.com/direct/inbox/")
+        client.click("Icon button that creates a new chat")
+
+        # Fill chat name in search field and wait for loading to complete
+        client.fill("Input for which user to send the message to", chat_name)
+        time.sleep(3)
+
+        # Select top item and press button to open chat
+        client.press("Tab")
+        client.press("Enter")
+        client.click("Button to open/start a chat in the 'send message' modal")
+
+    def send_message_in_chat(self, message: str, chat_name: str):
+        client = self.client
+
+        # Open chat
+        try:
+            self.goto_chat(chat_name)
+        except RuntimeError as e:
+            return str(e)
+
+        # Enter message and send
+        client.fill("The input where the user writes new messages", message)
+        client.press("Enter")
+
+        return f"Message sent in chat with {chat_name}: '{message}'"
+
+    def get_messages_from_chat(self, chat_name: str):
+        client = self.client
+
+        # Open chat
+        try:
+            self.goto_chat(chat_name)
+        except RuntimeError as e:
+            return str(e)
+
+        # Extract messages
+        chat: Chat = client.extract(
+            "The latest text messages in the current conversation. Skip any type of shared content.",
+            type_spec=Chat,
+        )
+
+        return chat.messages
+
+    def post_content(self, text: str, image_path: str):
+        client = self.client
+
+        # Go to Instagram and click button for creating a post
+        client.goto("https://www.instagram.com/")
+        client.wait_for("Loading to finish")
+        client.click(
+            "Button in side bar menu that creates a new post",
+            expected_outcome="A modal for creating a new post should appear",
+        )
+
+        # Upload image
+        client.click(
+            "Button in the 'Create new post' modal for selecting upload content from the computer"
+        )
+        client.upload_files(image_path)
+        client.wait_for(
+            "Image to be added to the modal and the crop interface to appear"
+        )
+
+        # Press next until caption input field appears
+        next_btn = client.get_element("Next step button in modal")
+        next_btn.click(expected_outcome="Side bar with filters appears")
+        next_btn.click(expected_outcome="Side bar with a caption input field appears")
+
+        # Fill in caption
+        client.fill("Caption input field for the new post", text)
+
+        client.click("The button for sharing the new post")
+        client.wait_for("Success modal that indicates that the post has been shared")
+
+        return f"Image has been posted with caption: {text}"
+
+
+def main():
+    global config
+
+    # Get Instagram Tools
+    ig_tools = InstagramTools()
+
+    # Util function for generating config for agent
+    generate_config = lambda thread_id=None: {
+        "configurable": {
+            "thread_id": thread_id or datetime.now().strftime("%Y%m%d_%H%M%S")
+        }
+    }
+
+    # Create tools for agent
+    @tool
+    def get_messages(user_name: str):
+        """Get latest instagram messages from a chat with a specific user based on their username"""
+        return ig_tools.get_messages_from_chat(user_name)
+
+    @tool
+    def send_message(message: str, user_name: str):
+        """Send a direct Instagram message to a specific user based on their username.
+        IMPORTANT: Only use this tool after explicitly asking the user for the message content and receiving their approval.
+        """
+        return ig_tools.send_message_in_chat(message, user_name)
+
+    @tool
+    def upload_post(caption: str, image_url: str):
+        """Upload a post to the user's Instagram account."""
+
+        image_path = download_image(image_url)
+
+        return ig_tools.post_content(caption, image_path)
+
+    @tool
+    def generate_image(prompt: str):
+        """Generate an image from a prompt and return the URL to the user.
+        IMPORTANT: If the prompt from the user is not very descriptive, write a new, more detailed prompt based on the user input that you use to invoke this tool.
+        """
+
+        url = DallEAPIWrapper(model="dall-e-3").run(prompt)
+
+        return url
+
+    # Util function for saving image locally from url
+    def download_image(url):
+        directory = "test/saved_images"
+        os.makedirs(directory, exist_ok=True)
+
+        response = requests.get(url)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"image_{timestamp}.png"
+
+        print("Response code for image: ", response.status_code)
+
+        if response.status_code == 200:
+            filepath = os.path.join(directory, filename)
+
+            with open(filepath, "wb") as file:
+                file.write(response.content)
+
+            return filepath
+        else:
+            raise RuntimeError("Failed to download image")
+
+    # Create the agent with Memory, Model, System Prompt and Tools
+    memory = MemorySaver()
+    model = ChatAnthropic(model_name="claude-3-sonnet-20240229")
+    system_prompt = SystemMessage(
+        content="""You are a helpful AI Agent called 'Igor the AI Agent' developed by Dendrite that is specialized in doing Instagram actions on behalf of the user.
+    You have been provided tools to do this reliably.
+    """
+    )
+    tools = [
+        get_messages,
+        send_message,
+        generate_image,
+        upload_post,
+    ]
+
+    # Initiate ReAct Agent
+    agent_executor = create_react_agent(
+        model, tools, checkpointer=memory, state_modifier=system_prompt
+    )
+
+    # Utils
+    config = generate_config()
+    separator = "-------"
+
+    # Create chat loop between Human and Agent in console
+    while True:
+
+        # Get human message input
+        user_input = input("User: ")
+        print(separator)
+        if user_input.lower() in ["quit", "exit", "q"]:
+            print("Goodbye!")
+            break
+
+        # Add new human message to agent and stream response
+        for event in agent_executor.stream(
+            {"messages": [HumanMessage(content=user_input)]}, config
+        ):
+            for value in event.values():
+                print("Assistant:", value["messages"][-1].content)
+                print(separator)
+
+
+main()
+
+```

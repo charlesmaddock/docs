@@ -6,12 +6,12 @@ description: "A Dendrite automation that logs into Outlook, filters unread email
 ## Overview
 
 The automation performs the following steps:
+
 1. Logs into Outlook
 2. Filters for unread emails
 3. Captures screenshots of email threads
 4. Analyzes email content using Claude AI
 5. Generates and sends appropriate responses
-
 
 ## Implementation
 
@@ -22,7 +22,7 @@ from typing import Tuple
 
 import anthropic
 from anthropic.types import Message, ToolUseBlock
-from dendrite_sdk import DendriteBrowser, DendritePage
+from dendrite_sdk import Dendrite, Page
 
 # Mock function to simulate a knowledge base query
 def get_product_knowledge():
@@ -36,10 +36,10 @@ def get_product_knowledge():
 async def analyze_and_draft_reply(screenshots: list) -> Tuple[bool, str]:
     """
     Analyzes email screenshots using Claude AI and drafts a response if appropriate.
-    
+
     Args:
         screenshots (list): List of base64-encoded screenshots of email messages.
-    
+
     Returns:
         Tuple[bool, str]: A boolean indicating whether to reply, and the drafted reply text.
     """
@@ -69,7 +69,7 @@ async def analyze_and_draft_reply(screenshots: list) -> Tuple[bool, str]:
     # Generate response using Claude
     response: Message = await client.messages.create(
         system=f"""
-        Analyze the email thread and draft a response if appropriate. 
+        Analyze the email thread and draft a response if appropriate.
         Do not draft a response if you lack the necessary information.
         If the email is unclear, suggest asking for clarification.
         Your name is 'Dendrite' and you represent Dendrite Toothpaste Supreme.
@@ -106,7 +106,7 @@ async def analyze_and_draft_reply(screenshots: list) -> Tuple[bool, str]:
 async def process_unread_email(page: DendritePage, subject: str):
     """
     Opens an unread email, analyzes its content, and replies if appropriate.
-    
+
     Args:
         page (DendritePage): The current Dendrite page object.
         subject (str): The subject line of the email to process.
@@ -163,7 +163,7 @@ async def process_outlook_inbox():
     browser = DendriteBrowser()
     await browser.authenticate("https://outlook.live.com/mail/0/")
     page = await browser.goto("https://outlook.live.com/mail/0/")
-    
+
     # Wait for the inbox to load
     await page.wait_for("The emails and dashboard to be fully loaded")
 
