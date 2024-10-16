@@ -1,0 +1,332 @@
+export const BetaNote = () => (
+  <Note>
+    Dendrite is currently in private beta. You can join our waitlist{" "}
+    <a href="https://dendrite.systems">here</a>
+  </Note>
+);
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### ask
+
+Asks a question about the active page and processes the response based on the specified type.
+
+**Usage**
+
+```python
+
+class Conversation(BaseModel):
+  username: str
+  unread_messages: int
+
+signed_in = client.ask("Is this a signed in dashboard?", type_spec=bool)
+
+if signed_in:
+  conversation = client.ask(
+      "Which conversation has most unread emails", type_spec=Conversation
+  )
+  print(conversation.username)
+
+```
+
+**Arguments**
+
+- `prompt` (str): The question or prompt to be asked.
+- `type_spec` ([TypeSpec](/sdk-reference/python/types/type-spec), optional): The expected return type, which can be a type or a schema. Defaults to None.
+
+**Returns**
+
+[TypeSpec](/sdk-reference/python/types/type-spec) | Any: The response data as the specified type. Defaults to Any.
+
+**Raises**
+
+`DendriteException`: If the request fails, the exception includes the failure message and a screenshot.
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### click
+
+Clicks an element on the active page based on the provided prompt.
+
+**Usage**
+
+```python
+client.click("Search button in navbar")
+```
+
+**Arguments**
+
+- `prompt` (str): The prompt describing the element to be clicked.
+- `expected_outcome` (str, optional): The expected outcome of the click action.
+- `use_cache` (bool, optional): Whether to use cached results for element retrieval. Defaults to True.
+- `timeout` (int, optional): The timeout (in milliseconds) for the click operation. Defaults to 15000.
+- `force` (bool, optional): Whether to force the click operation. Defaults to False.
+
+**Returns**
+
+`InteractionResponse`
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### extract
+
+Extract data from the active page based on a prompt and optional type specification.
+
+**Usage**
+
+```python
+
+class Article(BaseModel):
+  title: str
+  content: str
+  author: str
+  published_at: Optional[datetime] = None
+  views: Optional[int] = 0
+
+article = client.extract("The article information", type_spec=Article)
+print(article.title)
+
+```
+
+**Arguments**
+
+- `prompt` (str, optional): The prompt to guide the extraction.
+- `type_spec` ([TypeSpec](/sdk-reference/python/types/type-spec), optional): The type specification for the extracted data.
+- `use_cache` (bool, optional): Whether to use cached results. Defaults to True.
+
+**Returns**
+
+[TypeSpec](/sdk-reference/python/types/type-spec) | Any: The response data as the specified type. Defaults to Any.
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### fill_fields
+
+Fills multiple fields on the active page with the provided values.
+
+This method iterates through the given dictionary of fields and their corresponding values,
+making a separate fill request for each key-value pair.
+
+**Usage**
+
+```python
+client.fill_fields({
+  "First name": "John",
+  "Last name:": "Doe",
+  "Age": 36,
+  "Occupation": "Firefighter"
+})
+```
+
+**Paramaters**
+
+`fields` (Dict[str, Any]): A dictionary where each key is a field identifier (e.g., a prompt or selector) and each value is the content to fill in that field.
+
+**Returns**
+
+`None`
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### fill
+
+Fills an element on the active page with the provided value based on the given prompt.
+
+This method combines the functionality of `get_element` and `element.fill`,
+allowing for a more concise way to interact with elements on the page.
+
+**Usage**
+
+```python
+query = "AI agent builders"
+client.fill("Search input", value=query)
+```
+
+**Arguments**
+
+- `prompt` (str): The prompt describing the element to be filled.
+- `value` (str): The value to fill the element with.
+- `expected_outcome` (str, optional): The expected outcome of the fill action.
+- `use_cache` (bool, optional): Whether to use cached results for element retrieval. Defaults to True.
+- `max_retries` (int, optional): The maximum number of retry attempts for element retrieval. Defaults to 3.
+- `timeout` (int, optional): The timeout (in milliseconds) for the fill operation. Defaults to 15000.
+
+**Returns**
+
+`InteractionResponse`: The response from the interaction.
+
+**Raises**
+
+`DendriteException`: If no suitable element is found or if the fill operation fails.
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### get_download
+
+Retrieves the most recent reference to a downloaded file. To actually save the file to the local machine, you need to invoke the `download.save_as` method on the object returned from `get_download`.
+
+**Usage**
+
+```python
+# Download the file and get a reference to it
+client.click("Download File")
+download = client.get_download(timeout=5000)
+
+# Save the downloaded file to the suggested location
+download_path = "path/to/file/" + download.suggested_filename
+download.save_as(download_path)
+```
+
+**Arguments**
+
+- `timeout` (float, optional): The maximum amount of time (in milliseconds) to wait for the download to complete. Defaults to 30000.
+
+**Returns**
+
+- `Download`
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### goto
+
+Navigates the page to the specified URL, optionally in a new tab.
+
+**Usage**
+
+```python
+page = client.goto("https://example.com", expected_page="Feed of example articles")
+```
+
+**Arguments**
+
+- `url` (str): The URL to navigate to.
+- `new_page` (bool, optional): Whether to open the URL in a new page. Defaults to False.
+- `timeout` (float, optional): The maximum time (in milliseconds) to wait for the page to load. Defaults to 15000.
+- `expected_page` (str, optional): A description of the expected page type for verification at runtime. Defaults to an empty string.
+
+**Returns**
+
+- [Page](/sdk-reference/python/page): The page object after navigation.
+
+<InfoSnippet />
+<Info>
+  This method exists on the `Page` and `Dendrite` class. If invoked from a
+  `Dendrite` instance, it is performed on the _active_ page
+</Info>
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### new_tab
+
+Opens a new tab and navigates to the specified URL.
+
+**Usage**
+
+```python
+page = client.new_tab("https://example.com", expected_page="Feed of example articles")
+```
+
+**Arguments**
+
+- `url` (str): The URL to navigate to.
+- `timeout` (float, optional): The maximum time (in milliseconds) to wait for the page to load. Defaults to 15000.
+- `expected_page` (str, optional): A description of the expected page type for verification at runtime. Defaults to an empty string.
+  **Returns**
+
+`InteractionResponse`: The response from the interaction.
+
+**Raises**
+
+`DendriteException`: If no suitable element is found or if the fill operation fails.
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### press
+
+Presses a keyboard key on the active page, optionally with modifier keys.
+
+**Usage**
+
+```python
+client.fill("Search field", value="AI agents")
+client.press("Enter")
+```
+
+**Arguments**
+
+- `key` (str): The main key to be pressed.
+- `hold_shift` (bool, optional): Whether to hold the Shift key. Defaults to False.
+- `hold_ctrl` (bool, optional): Whether to hold the Control key. Defaults to False.
+- `hold_alt` (bool, optional): Whether to hold the Alt key. Defaults to False.
+- `hold_cmd` (bool, optional): Whether to hold the Command key (Meta on some systems). Defaults to False.
+
+**Returns**
+
+`None`
+
+**Raises**
+
+`DendriteException` if key press fails
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### upload_files
+
+Uploads files to the page using the file chooser.
+
+**Usage**
+
+```python
+client.click("Upload file button")
+client.upload_files("path/to/file.png")
+```
+
+**Arguments**
+
+- `files` (Union[str, pathlib.Path, FilePayload, Sequence[Union[str, pathlib.Path]], Sequence[FilePayload]]): The file(s) to be uploaded.
+  This can be a file path, a `FilePayload` object, or a sequence of file paths or `FilePayload` objects.
+- `timeout` (float, optional): The maximum amount of time (in milliseconds) to wait for the file chooser to be ready. Defaults to 30000.
+
+**Returns**
+
+- `None`
+
+<InfoSnippet />
+import InfoSnippet from "/snippets/page-methods/info-snippet.mdx";
+
+### wait_for
+
+Waits for the condition specified in the prompt to become true by periodically checking the page content.
+
+This method retrieves the page information and evaluates whether the specified condition (provided in the prompt) is met. It continues to retry until the total elapsed time exceeds the timeout.
+
+**Usage**
+
+```python
+try:
+  client.wait_for("Loading to complete", timeout=10000)
+  # continue with page interactions
+except PageConditionNotMet as e:
+  print(f"Condition was not met before timeout: {e.message}")
+```
+
+**Arguments**
+
+- `prompt` (str): The prompt to determine the condition to wait for on the page.
+- `timeout` (float, optional): The maximum time (in milliseconds) to wait for the condition. Defaults to 30000.
+
+**Returns**
+
+`True` if condition is met before timeout.
+
+**Raises**
+
+`PageConditionNotMet` if condition is not met before timeout
+
+<InfoSnippet />
