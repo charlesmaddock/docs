@@ -10,7 +10,7 @@ This method retrieves the page information and evaluates whether the specified c
 
 ```python
 try:
-  client.wait_for("Loading to complete", timeout=10000)
+  browser.wait_for("Loading to complete", timeout=10000)
   # continue with page interactions
 except PageConditionNotMet as e:
   print(f"Condition was not met before timeout: {e.message}")

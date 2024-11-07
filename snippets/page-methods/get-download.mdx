@@ -8,8 +8,8 @@ Retrieves the most recent reference to a downloaded file. To actually save the f
 
 ```python
 # Download the file and get a reference to it
-client.click("Download File")
-download = client.get_download(timeout=5000)
+browser.click("Download File")
+download = browser.get_download(timeout=5000)
 
 # Save the downloaded file to the suggested location
 download_path = "path/to/file/" + download.suggested_filename

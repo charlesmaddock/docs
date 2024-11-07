@@ -1,6 +1,6 @@
 ---
 title: Navigation
-description: "Navigating the web with the Dendrite client"
+description: "Navigating the web with the Dendrite browser"
 icon: route
 ---
 
@@ -29,10 +29,10 @@ The `goto` method returns a [Page](/sdk-reference/python/page) object, represent
 from dendrite import Dendrite
 
 # Initialize Dendrite instance
-client = Dendrite()
+browser = Dendrite()
 
  # Navigate to a website
-client.goto("https://www.example.com")
+browser.goto("https://www.example.com")
 ```
 
 In this example we navigate to "https://www.example.com" using the active page. If there is no active page, one is created.
@@ -42,7 +42,7 @@ In this example we navigate to "https://www.example.com" using the active page. 
 The `expected_page` parameter allows you to describe the type of page that should be expected after navigation. Dendrite uses this description to verify that the correct page has loaded.
 
 ```python
-client.goto("https://www.example.com/dashboard", expected_page="User dashboard")
+browser.goto("https://www.example.com/dashboard", expected_page="User dashboard")
 ```
 
 If the loaded page does not match the expected description, Dendrite can raise an exception or handle the discrepancy as needed.
@@ -50,9 +50,9 @@ If the loaded page does not match the expected description, Dendrite can raise a
 On web pages with long loading times, an exception will be thrown since the page doesn't match the expected page query. In those cases, it is helpful to use a combination of `wait_for` and `ask`.
 
 ```python
-client.goto("https://www.example.com/dashboard")
-client.wait_for("Loading to complete")
-correct_page = client.ask("Is this a User Dashboard?", type_spec=bool)
+browser.goto("https://www.example.com/dashboard")
+browser.wait_for("Loading to complete")
+correct_page = browser.ask("Is this a User Dashboard?", type_spec=bool)
 ```
 
 ### Opening a URL in a New Tab
@@ -61,12 +61,12 @@ You can open the URL in a new tab by setting `new_page=True`. This creates a new
 
 ## Authentication Session Management
 
-Authenticating on behalf of a user is simple using Dendrite. Just use our browser extension, Dendrite Vault, to handle sessions and then provide the url(s) you want to authenticate on when initiating your Dendrite client.
+Authenticating on behalf of a user is simple using Dendrite. Just use our browser extension, Dendrite Vault, to handle sessions and then provide the url(s) you want to authenticate on when initiating your Dendrite browser.
 
 ```python
-client = Dendrite(auth=["mail.google.com"])
+browser = Dendrite(auth=["mail.google.com"])
 try:
-  client.goto("https://mail.google.com/", expected_page="Gmail inbox")
+  browser.goto("https://mail.google.com/", expected_page="Gmail inbox")
 except DendriteException as e:
   print("Authentication failed, page was not a Gmail inbox")
 ```
@@ -83,10 +83,10 @@ When working with multiple tabs, it's important to keep track of each `Page` ins
 
 ```python
 # Get a list of all open pages
-open_pages = client.pages
+open_pages = browser.pages
 ```
 
-The `pages` property returns a list of all active `Page` instances managed by the `Dendrite` client.
+The `pages` property returns a list of all active `Page` instances managed by the `Dendrite` browser.
 
 ### Performing Actions on Specific Pages
 
@@ -97,11 +97,11 @@ To perform actions on a specific page, use methods on the `Page` class rather th
 ```python
 from dendrite import Dendrite
 
-client = Dendrite()
+browser = Dendrite()
 
 # Open multiple URLs in new tabs
-page1 = client.goto("https://www.example.com", new_page=True)
-page2 = client.goto("https://www.anotherexample.com", new_page=True)
+page1 = browser.goto("https://www.example.com", new_page=True)
+page2 = browser.goto("https://www.anotherexample.com", new_page=True)
 
 # Perform actions on page1
 page1.click("Sign up button")

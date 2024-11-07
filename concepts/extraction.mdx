@@ -21,15 +21,15 @@ The `extract` method is made for predictable extraction where one or several sub
 from dendrite import Dendrite
 
 # Initiate Dendrite instance
-client = Dendrite()
+browser = Dendrite()
 
 # Navigate and interact with search field
-client.goto("https://www.ycombinator.com/companies")
-client.fill("Search field", value="AI agent")
-client.press("Enter")
+browser.goto("https://www.ycombinator.com/companies")
+browser.fill("Search field", value="AI agent")
+browser.press("Enter")
 
 # Extract startups with natural language description
-startups = client.extract(
+startups = browser.extract(
   "All companies. Return a list of dicts with name, location, description and url"
 )
 
@@ -56,15 +56,15 @@ class Startups(BaseModel):
   items: list[Startup]
 
 # Initiate Dendrite instance
-client = Dendrite()
+browser = Dendrite()
 
 # Navigate and interact with search field
-client.goto("https://www.ycombinator.com/companies")
-client.fill("Search field", value="AI agent")
-client.press("Enter")
+browser.goto("https://www.ycombinator.com/companies")
+browser.fill("Search field", value="AI agent")
+browser.press("Enter")
 
 # Extract startups with structured output with Pydantic model
-startups = client.extract("", Startups)
+startups = browser.extract("", Startups)
 
 print(startups.items)
 
@@ -89,13 +89,13 @@ In this example, we're asking the agent if there are any unread emails in the in
 from dendrite import Dendrite
 
 # Initiate Dendrite instance
-client = Dendrite(auth=["mail.google.com"])
+browser = Dendrite(auth=["mail.google.com"])
 
 # Navigate and wait for loading
-client.goto("https://mail.google.com/", expected_page="Email inbox")
+browser.goto("https://mail.google.com/", expected_page="Email inbox")
 
 # Ask agent about the state of the page
-has_new_emails = client.ask(
+has_new_emails = browser.ask(
     "Do I have any unread emails in my inbox?", type_spec=bool
 )
 
@@ -127,17 +127,17 @@ class Posts(BaseModel):
   items: list[Post]
 
 # Initiate Dendrite instance
-client = Dendrite(auth=["instagram.com"])
+browser = Dendrite(auth=["instagram.com"])
 
 # Navigate to latest conversation
-client.goto(
+browser.goto(
   "https://www.instagram.com/direct/inbox/",
   expected_page="Instagram DM inbox"
 )
-client.click("Conversation at the top of the the sidebar")
+browser.click("Conversation at the top of the the sidebar")
 
 # Get shared posts
-posts = client.ask(
+posts = browser.ask(
   "Extract the posts sent to me in this conversation",
   type_spec: Posts
 )

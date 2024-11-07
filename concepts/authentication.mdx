@@ -48,14 +48,14 @@ To log in to instagram with your agent your need to:
     ![Instagram Dendrite Vault Examples](/images/instagram-example.png)    
   </Step>
   <Step title="Use with Dendrite">
-    Initiate your Dendrite client with an authenticated session.
+    Initiate your Dendrite browser with an authenticated session.
 
     ```python auth_example.py
-    # Initiate client with instagram session
-    client = Dendrite(auth="instagram.com")
+    # Initiate browser with instagram session
+    browser = Dendrite(auth="instagram.com")
 
     # Go to website with authenticated session
-    client.goto(
+    browser.goto(
       "https://instagram.com",
       expected_page="Logged in version of Instagram feed"
     )

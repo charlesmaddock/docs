@@ -66,11 +66,11 @@ async def analyze_and_draft_reply(screenshots: list) -> Tuple[bool, str]:
     messages = [{"role": "user", "content": user_content}]
     product_knowledge = get_product_knowledge()
 
-    # Initialize Anthropic client
-    client = anthropic.AsyncAnthropic(api_key=api_key)
+    # Initialize Anthropic browser
+    browser = anthropic.AsyncAnthropic(api_key=api_key)
 
     # Generate response using Claude
-    response: Message = await client.messages.create(
+    response: Message = await browser.messages.create(
         system=f"""
         Analyze the email thread and draft a response if appropriate.
         Do not draft a response if you lack the necessary information.

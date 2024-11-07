@@ -59,7 +59,7 @@ from langchain_community.utilities.dalle_image_generator import DallEAPIWrapper
 from langgraph.prebuilt import create_react_agent
 ```
 
-We'll also create a `.env` file for our Dendrite API key, which is used by default by the `Dendrite` client.
+We'll also create a `.env` file for our Dendrite API key, which is used by default by the `Dendrite` browser.
 
 ```text .env
 DENDRITE_API_KEY=sk...
@@ -73,15 +73,15 @@ Next, we're going to start building our Instagram tools. We are going to create 
 2. Sending a DM
 3. Posting content
 
-For these, we're going to create a class called `InstagramTools`. The class will manage the Dendrite client and will contain the methods used for the tools metioned above. Let's start with creating the class and initiating Dendrite.
+For these, we're going to create a class called `InstagramTools`. The class will manage the Dendrite browser and will contain the methods used for the tools metioned above. Let's start with creating the class and initiating Dendrite.
 
 ```python agent.py
 class InstagramTools:
     def __init__(self):
-        self.client = Dendrite(auth="instagram.com")
+        self.browser = Dendrite(auth="instagram.com")
 ```
 
-In the code above, we initiate the Dendrite client with an authenticated session on instagram.com. Read more about authentication [here](/concepts/authentication).
+In the code above, we initiate the Dendrite browser with an authenticated session on instagram.com. Read more about authentication [here](/concepts/authentication).
 
 The `Dendrite` class uses our environment variable `DENDRITE_API_KEY` by default.
 
@@ -93,20 +93,20 @@ For our DM related tools, we're going to create a utility function that navigate
     # Inside InstagramTools
 
     def goto_chat(self, chat_name: str):
-        client = self.client
+        browser = self.browser
 
         # Go to Instagram DM inbox and press button to open a chat
-        client.goto("https://www.instagram.com/direct/inbox/")
-        client.click("Icon button that creates a new chat")
+        browser.goto("https://www.instagram.com/direct/inbox/")
+        browser.click("Icon button that creates a new chat")
 
         # Fill chat name in search field and wait for loading to complete
-        client.fill("Input for which user to send the message to", chat_name)
+        browser.fill("Input for which user to send the message to", chat_name)
         time.sleep(3)
 
         # Select top item and press button to open chat
-        client.press("Tab")
-        client.press("Enter")
-        client.click("Button to open/start a chat in the 'send message' modal")
+        browser.press("Tab")
+        browser.press("Enter")
+        browser.click("Button to open/start a chat in the 'send message' modal")
 ```
 
 This method takes in a chat name, and navigates on the Instagram website just like a human would.
@@ -130,7 +130,7 @@ class Chat(BaseModel):
 
     # Sending messages
     def send_message_in_chat(self, message: str, chat_name: str):
-        client = self.client
+        browser = self.browser
 
         # Open chat
         try:
@@ -139,14 +139,14 @@ class Chat(BaseModel):
             return str(e)
 
         # Enter message and send
-        client.fill("The input where the user writes new messages", message)
-        client.press("Enter")
+        browser.fill("The input where the user writes new messages", message)
+        browser.press("Enter")
 
         return f"Message sent in chat with {chat_name}: '{message}'"
 
     # Retrieving messages
     def get_messages_from_chat(self, chat_name: str):
-        client = self.client
+        browser = self.browser
 
         # Open chat
         try:
@@ -155,7 +155,7 @@ class Chat(BaseModel):
             return str(e)
 
         # Extract messages
-        chat: Chat = client.extract(
+        chat: Chat = browser.extract(
             "The latest text messages in the current conversation. Skip any type of shared content.",
             type_spec=Chat,
         )
@@ -173,35 +173,35 @@ Our last Instagram tool is for posting content. We will implement it using simpl
     # Inside InstagramTools
 
     def post_content(self, text: str, image_path: str):
-        client = self.client
+        browser = self.browser
 
         # Go to Instagram and click button for creating a post
-        client.goto("https://www.instagram.com/")
-        client.wait_for("Loading to finish")
-        client.click(
+        browser.goto("https://www.instagram.com/")
+        browser.wait_for("Loading to finish")
+        browser.click(
             "Button in side bar menu that creates a new post",
             expected_outcome="A modal for creating a new post should appear",
         )
 
         # Upload image
-        client.click(
+        browser.click(
             "Button in the 'Create new post' modal for selecting upload content from the computer"
         )
-        client.upload_files(image_path)
-        client.wait_for(
+        browser.upload_files(image_path)
+        browser.wait_for(
             "Image to be added to the modal and the crop interface to appear"
         )
 
         # Press next until caption input field appears
-        next_btn = client.get_element("Next step button in modal")
+        next_btn = browser.get_element("Next step button in modal")
         next_btn.click(expected_outcome="Side bar with filters appears")
         next_btn.click(expected_outcome="Side bar with a caption input field appears")
 
         # Fill in caption
-        client.fill("Caption input field for the new post", text)
+        browser.fill("Caption input field for the new post", text)
 
-        client.click("The button for sharing the new post")
-        client.wait_for("Success modal that indicates that the post has been shared")
+        browser.click("The button for sharing the new post")
+        browser.wait_for("Success modal that indicates that the post has been shared")
 
         return f"Image has been posted with caption: {text}"
 ```
@@ -379,26 +379,26 @@ class Chat(BaseModel):
 
 class InstagramTools:
     def __init__(self):
-        self.client = Dendrite(auth="instagram.com")
+        self.browser = Dendrite(auth="instagram.com")
 
     def goto_chat(self, chat_name: str):
-        client = self.client
+        browser = self.browser
 
         # Go to Instagram DM inbox and press button to open a chat
-        client.goto("https://www.instagram.com/direct/inbox/")
-        client.click("Icon button that creates a new chat")
+        browser.goto("https://www.instagram.com/direct/inbox/")
+        browser.click("Icon button that creates a new chat")
 
         # Fill chat name in search field and wait for loading to complete
-        client.fill("Input for which user to send the message to", chat_name)
+        browser.fill("Input for which user to send the message to", chat_name)
         time.sleep(3)
 
         # Select top item and press button to open chat
-        client.press("Tab")
-        client.press("Enter")
-        client.click("Button to open/start a chat in the 'send message' modal")
+        browser.press("Tab")
+        browser.press("Enter")
+        browser.click("Button to open/start a chat in the 'send message' modal")
 
     def send_message_in_chat(self, message: str, chat_name: str):
-        client = self.client
+        browser = self.browser
 
         # Open chat
         try:
@@ -407,13 +407,13 @@ class InstagramTools:
             return str(e)
 
         # Enter message and send
-        client.fill("The input where the user writes new messages", message)
-        client.press("Enter")
+        browser.fill("The input where the user writes new messages", message)
+        browser.press("Enter")
 
         return f"Message sent in chat with {chat_name}: '{message}'"
 
     def get_messages_from_chat(self, chat_name: str):
-        client = self.client
+        browser = self.browser
 
         # Open chat
         try:
@@ -422,7 +422,7 @@ class InstagramTools:
             return str(e)
 
         # Extract messages
-        chat: Chat = client.extract(
+        chat: Chat = browser.extract(
             "The latest text messages in the current conversation. Skip any type of shared content.",
             type_spec=Chat,
         )
@@ -430,35 +430,35 @@ class InstagramTools:
         return chat.messages
 
     def post_content(self, text: str, image_path: str):
-        client = self.client
+        browser = self.browser
 
         # Go to Instagram and click button for creating a post
-        client.goto("https://www.instagram.com/")
-        client.wait_for("Loading to finish")
-        client.click(
+        browser.goto("https://www.instagram.com/")
+        browser.wait_for("Loading to finish")
+        browser.click(
             "Button in side bar menu that creates a new post",
             expected_outcome="A modal for creating a new post should appear",
         )
 
         # Upload image
-        client.click(
+        browser.click(
             "Button in the 'Create new post' modal for selecting upload content from the computer"
         )
-        client.upload_files(image_path)
-        client.wait_for(
+        browser.upload_files(image_path)
+        browser.wait_for(
             "Image to be added to the modal and the crop interface to appear"
         )
 
         # Press next until caption input field appears
-        next_btn = client.get_element("Next step button in modal")
+        next_btn = browser.get_element("Next step button in modal")
         next_btn.click(expected_outcome="Side bar with filters appears")
         next_btn.click(expected_outcome="Side bar with a caption input field appears")
 
         # Fill in caption
-        client.fill("Caption input field for the new post", text)
+        browser.fill("Caption input field for the new post", text)
 
-        client.click("The button for sharing the new post")
-        client.wait_for("Success modal that indicates that the post has been shared")
+        browser.click("The button for sharing the new post")
+        browser.wait_for("Success modal that indicates that the post has been shared")
 
         return f"Image has been posted with caption: {text}"
 

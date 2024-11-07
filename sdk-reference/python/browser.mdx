@@ -24,7 +24,7 @@ Initializing it starts a new browser instance.
 ```python
 from dendrite import DendriteBrowser
 
-client = Dendrite(dendrite_api_key="your_dendrite_api_key")
+browser = Dendrite(dendrite_api_key="your_dendrite_api_key")
 # Perform actions in the browser
 ...
 ```
@@ -44,7 +44,7 @@ Retrieves the list of active pages managed by the PageManager.
 **Usage**
 
 ```python
-pages = client.pages
+pages = browser.pages
 ```
 
 **Returns**
@@ -72,7 +72,7 @@ Retrieves the currently active page managed by the PageManager.
 **Usage**
 
 ```python
-active_page = client.get_active_page()
+active_page = browser.get_active_page()
 ```
 
 **Returns**
@@ -86,7 +86,7 @@ Opens a new page in the browser.
 **Usage**
 
 ```python
-new_page = client.new_page()
+new_page = browser.new_page()
 ```
 
 **Returns**
@@ -102,7 +102,7 @@ Adds cookies to the current browser context.
 ```python
 cookies = [
     {"name": "session_id", "value": "123456", "domain": "example.com"}
-] client.add_cookies(cookies)
+] browser.add_cookies(cookies)
 ```
 
 **Arguments**
@@ -116,7 +116,7 @@ Closes the browser and uploads authentication session data if available.
 **Usage**
 
 ```python
-client.close()
+browser.close()
 ```
 
 This ensures that the browser is properly closed when you're done using it.

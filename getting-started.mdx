@@ -41,14 +41,14 @@ from dendrite import Dendrite
 DENDRITE_API_KEY = "..."
 
 def hello_world():
-  # Initate the Dendrite client
-  client = Dendrite(dendrite_api_key=DENDRITE_API_KEY)
+  # Initate the Dendrite browser
+  browser = Dendrite(dendrite_api_key=DENDRITE_API_KEY)
 
   # Navigate with the `goto` method
-  client.goto("https://google.com")
+  browser.goto("https://google.com")
 
   # Populate the search field
-  client.fill("Search input field","hello world")
+  browser.fill("Search input field","hello world")
 
 hello_world()
 ```

@@ -12,10 +12,10 @@ class Conversation(BaseModel):
   username: str
   unread_messages: int
 
-signed_in = client.ask("Is this a signed in dashboard?", type_spec=bool)
+signed_in = browser.ask("Is this a signed in dashboard?", type_spec=bool)
 
 if signed_in:
-  conversation = client.ask(
+  conversation = browser.ask(
       "Which conversation has most unread emails", type_spec=Conversation
   )
   print(conversation.username)

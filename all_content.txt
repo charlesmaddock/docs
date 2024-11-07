@@ -18,10 +18,10 @@ class Conversation(BaseModel):
   username: str
   unread_messages: int
 
-signed_in = client.ask("Is this a signed in dashboard?", type_spec=bool)
+signed_in = browser.ask("Is this a signed in dashboard?", type_spec=bool)
 
 if signed_in:
-  conversation = client.ask(
+  conversation = browser.ask(
       "Which conversation has most unread emails", type_spec=Conversation
   )
   print(conversation.username)
@@ -51,7 +51,7 @@ Clicks an element on the active page based on the provided prompt.
 **Usage**
 
 ```python
-client.click("Search button in navbar")
+browser.click("Search button in navbar")
 ```
 
 **Arguments**
@@ -84,7 +84,7 @@ class Article(BaseModel):
   published_at: Optional[datetime] = None
   views: Optional[int] = 0
 
-article = client.extract("The article information", type_spec=Article)
+article = browser.extract("The article information", type_spec=Article)
 print(article.title)
 
 ```
@@ -112,7 +112,7 @@ making a separate fill request for each key-value pair.
 **Usage**
 
 ```python
-client.fill_fields({
+browser.fill_fields({
   "First name": "John",
   "Last name:": "Doe",
   "Age": 36,
@@ -142,7 +142,7 @@ allowing for a more concise way to interact with elements on the page.
 
 ```python
 query = "AI agent builders"
-client.fill("Search input", value=query)
+browser.fill("Search input", value=query)
 ```
 
 **Arguments**
@@ -173,8 +173,8 @@ Retrieves the most recent reference to a downloaded file. To actually save the f
 
 ```python
 # Download the file and get a reference to it
-client.click("Download File")
-download = client.get_download(timeout=5000)
+browser.click("Download File")
+download = browser.get_download(timeout=5000)
 
 # Save the downloaded file to the suggested location
 download_path = "path/to/file/" + download.suggested_filename
@@ -199,7 +199,7 @@ Navigates the page to the specified URL, optionally in a new tab.
 **Usage**
 
 ```python
-page = client.goto("https://example.com", expected_page="Feed of example articles")
+page = browser.goto("https://example.com", expected_page="Feed of example articles")
 ```
 
 **Arguments**
@@ -227,7 +227,7 @@ Opens a new tab and navigates to the specified URL.
 **Usage**
 
 ```python
-page = client.new_tab("https://example.com", expected_page="Feed of example articles")
+page = browser.new_tab("https://example.com", expected_page="Feed of example articles")
 ```
 
 **Arguments**
@@ -253,8 +253,8 @@ Presses a keyboard key on the active page, optionally with modifier keys.
 **Usage**
 
 ```python
-client.fill("Search field", value="AI agents")
-client.press("Enter")
+browser.fill("Search field", value="AI agents")
+browser.press("Enter")
 ```
 
 **Arguments**
@@ -283,8 +283,8 @@ Uploads files to the page using the file chooser.
 **Usage**
 
 ```python
-client.click("Upload file button")
-client.upload_files("path/to/file.png")
+browser.click("Upload file button")
+browser.upload_files("path/to/file.png")
 ```
 
 **Arguments**
@@ -310,7 +310,7 @@ This method retrieves the page information and evaluates whether the specified c
 
 ```python
 try:
-  client.wait_for("Loading to complete", timeout=10000)
+  browser.wait_for("Loading to complete", timeout=10000)
   # continue with page interactions
 except PageConditionNotMet as e:
   print(f"Condition was not met before timeout: {e.message}")

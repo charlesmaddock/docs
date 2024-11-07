@@ -6,9 +6,9 @@ icon: arrow-pointer
 
 ## Interaction basics
 
-Dendrite enables easy web based actions for AI agents. With the Dendrite client, you can create workflows that match the way a human would act in a browser, using intuitive tools like `click` and `fill`, all with natural language.
+Dendrite enables easy web based actions for AI agents. With the Dendrite browser, you can create workflows that match the way a human would act in a browser, using intuitive tools like `click` and `fill`, all with natural language.
 
-Here are the core methods used when interacting with web pages through the Dendrite client:
+Here are the core methods used when interacting with web pages through the Dendrite browser:
 
 - `click` for clicking on the described element
 - `fill` for filling a field with some value
@@ -37,21 +37,21 @@ from dendrite import Dendrite
 
 def send_email(to, subject, message):
   # Initiate Dendrite instance and authenticate
-  client = Dendrite(auth=["mail.google.com"])
+  browser = Dendrite(auth=["mail.google.com"])
 
   # Navigate and check for successful authentication
-  client.goto("https://mail.google.com/", expected_page="Gmail inbox")
+  browser.goto("https://mail.google.com/", expected_page="Gmail inbox")
 
   # Create a new email and populate fields
-  client.click("New email draft button")
-  client.fill_fields({
+  browser.click("New email draft button")
+  browser.fill_fields({
     "Recipient": to,
     "Subject": subject,
     "Message": message
   })
 
   # Send email
-  client.click("The button for sending the email")
+  browser.click("The button for sending the email")
 
 send_email(
   "john@doe.com",
@@ -62,4 +62,4 @@ send_email(
 
 In the above example, we create the `send_email` function that takes in `to`, `subject` and `message` as arguments. This tool would then be passed on to an agent to be used by its function calling abilities.
 
-The tool uses the Dendrite client to perform the actions in the browser, just like a human would. This gives you infinite flexibility to modify your agent's behaviour, without being limited by traditional REST APIs.
+The tool uses the Dendrite browser to perform the actions in the browser, just like a human would. This gives you infinite flexibility to modify your agent's behaviour, without being limited by traditional REST APIs.

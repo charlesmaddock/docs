@@ -15,7 +15,7 @@ class Article(BaseModel):
   published_at: Optional[datetime] = None
   views: Optional[int] = 0
 
-article = client.extract("The article information", type_spec=Article)
+article = browser.extract("The article information", type_spec=Article)
 print(article.title)
 
 ```
