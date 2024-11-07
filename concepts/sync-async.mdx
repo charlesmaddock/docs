@@ -23,7 +23,7 @@ To use the asynchronous Dendrite browser, just import `AsyncDendrite` from `dend
 
 ```python
 import asyncio
-from dendrite.async_api import AsyncDendrite
+from dendrite import AsyncDendrite
 
 async def main():
   # Initiate async Dendrite browser
@@ -43,7 +43,7 @@ In this example we will go to the YC startup directory, extract the urls of all 
 ```python
 import asyncio
 from pydantic import BaseModel
-from dendrite.async_api import AsyncDendrite
+from dendrite import AsyncDendrite
 
 # Define Pydantic Models for data extraction
 class Founder(BaseModel):
