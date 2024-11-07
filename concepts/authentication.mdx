@@ -16,11 +16,11 @@ Our Chrome extension, **Dendrite Vault**, enables you to securely share your web
     extension icon and press **Save authentication session**
   </Step>
   <Step title="Authenticate in Script">
-    Once your session has been saved, you can add it to your dendrite browser session
-    with:
+    Once your session has been saved, you can use it in your Dendrite browser like this:
 
     ```python
-    Dendrite(auth=["domain.com", "example.com"])
+    Dendrite(auth="domain.com")
+    Dendrite(auth=["domain1.com", "domain2.com"])
     ```
 
   </Step>
@@ -63,6 +63,21 @@ To log in to instagram with your agent your need to:
 
   </Step>
 </Steps>
+
+
+
+```python auth_example.py
+from dendrite import Dendrite
+
+browser = Dendrite(auth="instagram.com")
+
+browser.goto(
+    "https://instagram.com",
+    expected_page="You should be logged in with the instagram feed visible",
+)
+desc = browser.ask("Describe the first post in my feed")
+print("First post description: ", desc)
+```
 
 ## Let's scale up
 

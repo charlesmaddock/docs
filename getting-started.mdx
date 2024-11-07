@@ -7,6 +7,13 @@ description: "Create your first web action"
 
 First, let's get a Dendrite API key from the [dashboard](https://dendrite.systems/app).
 
+You can use the keys in your code or have them in a `.env` file like this:
+
+```
+DENDRITE_API_KEY=
+```
+
+
 ## Installation
 
 Install the Dendrite SDK. We also need to run `dendrite install` to install the browser drivers.
@@ -14,10 +21,13 @@ Install the Dendrite SDK. We also need to run `dendrite install` to install the 
 With pip:
 
 ```
-pip install dendrite-sdk && dendrite install
+pip install dendrite && dendrite install 
 ```
 
 With poetry:
+```
+poetry add dendrite && poetry run dendrite install 
+```
 
 ```
 poetry add dendrite-sdk && poetry run dendrite install
@@ -25,10 +35,11 @@ poetry add dendrite-sdk && poetry run dendrite install
 
 ## Hello world
 
-For our first Dendrite script, let's start the Dendrite client, go to google.com and enter "hello world" into the search field:
+For our first Dendrite script, let's start the `Dendrite` browser, go to google.com and enter "hello world" into the search field:
 
-```python
-from dendrite_sdk import Dendrite
+```python main.py
+import asyncio
+from dendrite import Dendrite
 
 # Get your Dendrite API key from dendrite.systems
 DENDRITE_API_KEY = "..."
