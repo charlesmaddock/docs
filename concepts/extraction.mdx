@@ -18,7 +18,7 @@ The `extract` method is made for predictable extraction where one or several sub
 ### Simple example
 
 ```python
-from dendrite_sdk import Dendrite
+from dendrite import Dendrite
 
 # Initiate Dendrite instance
 client = Dendrite()
@@ -42,7 +42,7 @@ print(startups)
 In this example, we extract all AI agent companies in the YC startup directory. We use a Pydantic model to get a typed response.
 
 ```python
-from dendrite_sdk import Dendrite
+from dendrite import Dendrite
 from pydantic import BaseModel
 
 # Define Pydantic models
@@ -86,7 +86,7 @@ For certain tasks where the page is more dynamic, the `ask` is more helpful for 
 In this example, we're asking the agent if there are any unread emails in the inbox and proceeding differently depending on the outcome.
 
 ```python
-from dendrite_sdk import Dendrite
+from dendrite import Dendrite
 
 # Initiate Dendrite instance
 client = Dendrite(auth=["mail.google.com"])
@@ -114,7 +114,7 @@ In this example, we're extracting the latest posts sent as DM to the user throug
 2. a mix of plain text messages and shared posts
 
 ```python
-from dendrite_sdk import Dendrite
+from dendrite import Dendrite
 from pydantic import BaseModel
 
 # Define Pydantic models

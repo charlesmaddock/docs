@@ -17,13 +17,13 @@ Asynchronous programming allows you to handle multiple tasks concurrently withou
 
 ## How to Use Async
 
-To use the asynchronous Dendrite client, just import `AsyncDendrite` from `dendrite_sdk.async_api` and use it just like you would use the `Dendrite` class. It has all the same methods and all classes that stem from it will also be Async, like `AsyncPage`.
+To use the asynchronous Dendrite client, just import `AsyncDendrite` from `dendrite.async_api` and use it just like you would use the `Dendrite` class. It has all the same methods and all classes that stem from it will also be Async, like `AsyncPage`.
 
 ### Simple Example
 
 ```python
 import asyncio
-from dendrite_sdk.async_api import AsyncDendrite
+from dendrite.async_api import AsyncDendrite
 
 async def main():
   # Initiate async Dendrite client
@@ -43,7 +43,7 @@ In this example we will go to the YC startup directory, extract the urls of all 
 ```python
 import asyncio
 from pydantic import BaseModel
-from dendrite_sdk.async_api import AsyncDendrite
+from dendrite.async_api import AsyncDendrite
 
 # Define Pydantic Models for data extraction
 class Founder(BaseModel):
