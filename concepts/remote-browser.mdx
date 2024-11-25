@@ -1,53 +1,64 @@
 ---
-title: Remote Hosting
+title: Remote Browser
 description: "Start running web automations at scale."
+icon: "arrow-trend-up"
 ---
 
 ## Scaling up
 
-The local `Dendrite` browser is great for development, but if you want to start scaling up you might want to use a hosted browser instead. We currently support Browserbase as provider.
+The local `Dendrite` browser is great for development, but if you want to start scaling up you might want to use a hosted browser instead. We currently support Browserless and Browserbase as provider.
+
+## Browserless
+
+To get started you'll need to head over to [Browserless](https://www.Browserless.io/) and create an account. Get the API Key and save them in your .env file like this:
+
+
+```bash .env
+# ... previous keys 
+BROWSERLESS_API_KEY=
+```
+
+To start using the the remote browser you just need to specify the remote_config argument when initiating `Dendrite`. Import the `BrowserlessConfig`  as following `from dendrite.remote import BrowserlessConfig`.
+
+
+```py
+# from dendrite_python_sdk import DendriteBrowser
+from dendrite.remote import BrowserlessConfig
+
+browser = Dendrite(remote_config = BrowserlessConfig())
+async_browser = AsyncDendrite(remote_config = BrowserlessConfig())
+```
+
+<Note>You can use the remote browser just as you would the local `Dendrite` browser. The only difference is that the browser is running in the cloud.</Note>
+
 
 ## Browserbase
 
 To get started you'll need to head over to [Browserbase](https://www.browserbase.com/) and create an account. Get both the Project ID and API Key and save them in your .env file like this:
 
+
 ```bash .env
-# ... previous keys
+# ... previous keys 
 BROWSERBASE_API_KEY=
 BROWSERBASE_PROJECT_ID=
 ```
 
-To start using the the remote browser you just need to change the import and and browser initialisation to use the `BrowsebaseBrowser` class instead.
+To start using the the remote browser you just need to specify the remote_config argument when initiating `Dendrite`. Import the `BrowserbaseConfig`  as following `from dendrite.remote import BrowserbaseConfig`.
+
 
 ```py
 # from dendrite_python_sdk import DendriteBrowser
-from dendrite.ext.browserbase import BrowserbaseBrowser
+from dendrite.remote import BrowserbaseConfig
 
-...
-
-# browser = DendriteBrowser(...)
-browser = BrowserbaseBrowser(
-    # Include the previous arguments from DendriteBrowser
-    browserbase_api_key="...", # or specify the browsebase keys in the .env file
-    browserbase_project_id="..."
-)
-
-...
+browser = Dendrite(remote_config = BrowserbaseConfig())
+async_browser = AsyncDendrite(remote_config = BrowserbaseConfig())
 ```
 
-<Note>
-  You can use the remote browser just as you would the local `DendriteBrowser`.
-  The only difference is that the browser is running in the cloud.
-</Note>
+<Note>You can use the remote browser just as you would the local `Dendrite` browser. The only difference is that the browser is running in the cloud.</Note>
 
 ### Proxy and downloads
 
-You can active rotating proxies by setting `enable_proxy=True` when creating the `BrowsebaseBrowser`. The proxies are provided by Browserbase and you can track your usage on their website.
+You can active rotating proxies by setting `enable_proxy=True` when creating the `BrowserbaseConfig`. The proxies are provided by Browserbase and you can track your usage on their website.
+ 
 
-To be able to download files you have to set the `enable_download=True` when instantiating the `BrowsebaseBrowser`.
-
-<Warning>
-  {" "}
-  If you have enabled downloads it is important that you call `browser.close=()`
-  when you're done. Otherwise the Browserbase session will continue until it timeouts.
-</Warning>
+<Warning> When using Browserbase as provider it is extra important that you call `browser.close=()` when you're done. Otherwise the Browserbase session will continue until it timeouts.</Warning>
