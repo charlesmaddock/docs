@@ -22,7 +22,7 @@ To start using the the remote browser you just need to specify the remote_config
 
 
 ```py
-# from dendrite_python_sdk import DendriteBrowser
+from dendrite import Dendrite, AsyncDendrite
 from dendrite.remote import BrowserlessConfig
 
 browser = Dendrite(remote_config = BrowserlessConfig())
@@ -47,7 +47,7 @@ To start using the the remote browser you just need to specify the remote_config
 
 
 ```py
-# from dendrite_python_sdk import DendriteBrowser
+from dendrite import Dendrite, AsyncDendrite
 from dendrite.remote import BrowserbaseConfig
 
 browser = Dendrite(remote_config = BrowserbaseConfig())
