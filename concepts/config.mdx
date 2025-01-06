@@ -1,0 +1,137 @@
+---
+title: 'Configuration'
+description: 'Learn how to configure Language Models (LLMs) and general settings in Dendrite'
+icon: 'gear'
+---
+
+# Configuring Dendrite
+
+## General Configuration
+
+The `Config` class in Dendrite handles all configuration settings, including caching, authentication sessions, and LLM configurations. Here's how to use it:
+
+```python
+from dendrite.logic.config import Config
+from pathlib import Path
+
+# Default configuration
+config = Config()
+
+# Custom configuration
+config = Config(
+    root_path=".custom-dendrite",  # Default: ".dendrite"
+    cache_path="custom-cache",     # Default: "cache"
+    auth_session_path="sessions",  # Default: "auth"
+)
+```
+
+### Configuration Options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `root_path` | `.dendrite` | Base directory for all Dendrite files |
+| `cache_path` | `cache` | Directory for caching extraction results and selectors |
+| `auth_session_path` | `auth` | Directory for storing authentication sessions |
+
+The configuration system manages several caches:
+- Extract cache: Stores script extraction results
+- Element cache: Stores element selectors
+- Storage cache: Stores browser storage states
+
+## Language Model Configuration
+
+Dendrite uses various AI agents powered by Large Language Models (LLMs) to interact with web browsers. While the library defaults to using Anthropic's Claude 3.5 Sonnet model, you have full flexibility to configure different models for each agent.
+
+By default, Dendrite uses the following configuration for its agents:
+
+| Agent | Default Model |
+|-------|--------------|
+| extract_agent | claude-3-5-sonnet-20241022 |
+| scroll_agent | claude-3-5-sonnet-20241022 |
+| ask_page_agent | claude-3-5-sonnet-20241022 |
+| segment_agent | claude-3-haiku-20240307 |
+| select_agent | claude-3-5-sonnet-20241022 |
+| verify_action_agent | claude-3-5-sonnet-20241022 |
+
+## Customizing Models
+
+You can customize the models used by each agent in several ways:
+
+### 1. During Initialization
+
+```python
+from dendrite.logic.llm.agent import LLM
+from dendrite.logic.llm.config import LLMConfig
+from dendrite.logic.config import Config
+
+# Create custom configurations for specific agents
+custom_agents = {
+    "extract_agent": LLM("gpt-4", temperature=0.2, max_tokens=2000),
+    "ask_page_agent": LLM("claude-3-opus-20240229", temperature=0.1)
+}
+
+# Initialize config with custom agents
+llm_config = LLMConfig(default_agents=custom_agents)
+config = Config(llm_config=llm_config)
+
+# Use in Dendrite initialization
+browser = AsyncDendrite(config=config)
+```
+
+### 2. Registering Agents at Runtime
+
+<CodeGroup>
+
+```python Register Single Agent
+await config.llm_config.register_agent(
+    "extract_agent",
+    LLM("gpt-4", temperature=0.2)
+)
+```
+
+```python Register Multiple Agents
+new_agents = {
+    "scroll_agent": LLM("claude-3-opus-20240229", temperature=0.1),
+    "select_agent": LLM("gpt-4", temperature=0.0)
+}
+await config.llm_config.register(new_agents)
+```
+
+</CodeGroup>
+
+## Supported Models
+
+Dendrite uses LiteLLM under the hood for calling the LLMs, which supports:
+
+- OpenAI models (GPT-4, GPT-3.5)
+- Anthropic models (Claude 3 Opus, Sonnet, Haiku)
+- Local models (LlamaCPP, vLLM deployments)
+- Many other providers through LiteLLM's integrations
+
+## Important Notes
+
+- The default configuration uses Claude 3.5 Sonnet as it provides a good balance of performance and cost
+- While you can use any supported model, the framework's performance and accuracy might vary with different models
+- The `segment_agent` defaults to GPT-4 as it has shown better performance for this specific task
+- Consider the following when choosing models:
+  - Token context window requirements
+  - Cost per token
+  - Inference speed
+  - Model capabilities for specific tasks
+  
+## Example: Using Local Models
+
+```python
+from dendrite.logic.llm.agent import LLM
+from dendrite.logic.llm.config import LLMConfig
+
+# Configure local model deployment
+local_agents = {
+    "extract_agent": LLM(
+        "local-model",
+        temperature=0.3,
+        max_tokens=1500,
+        base_url="http://localhost:8000"
+    ),
+}
+llm_config = LLMConfig(default_agents=local_agents)

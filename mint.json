@@ -54,7 +54,8 @@
         "concepts/navigation",
         "concepts/interactions",
         "concepts/extraction",
-        "concepts/authentication"
+        "concepts/authentication",
+        "concepts/config"
       ]
     },
     {

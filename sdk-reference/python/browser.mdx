@@ -24,14 +24,12 @@ Initializing it starts a new browser instance.
 ```python
 from dendrite import DendriteBrowser
 
-browser = Dendrite(dendrite_api_key="your_dendrite_api_key")
+browser = Dendrite()
 # Perform actions in the browser
 ...
 ```
 
 **Arguments**
-
-- `dendrite_api_key` (str, optional): will default to env variable `DENDRITE_API_KEY`
 - `auth` (str | list[str], optional): Domains to authenticate on. [Read more](/concepts/authentication)
 - `playwright_options` (Any, optional): Options for configuring Playwright. Defaults to running in non-headless mode with stealth arguments.
 

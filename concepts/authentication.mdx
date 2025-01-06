@@ -4,15 +4,14 @@ description: "How to authenticate on any website using Dendrite Vault"
 icon: lock
 ---
 
-Our Chrome extension, **Dendrite Vault**, enables you to securely share your website sessions with your AI agent, mirroring the access you have in your local browser.
+Our **Dendrite CLI** enables you to securely to share your website permission with your AI agent, mirroring the access you have in your local browser. Everything is stored locally ensuring that no one else other than you has access to the authenticated sessions.
 
 <Steps>
-  <Step title="Download the extension">
-    First, add Dendrite Vault to your browser, [download it here](https://chromewebstore.google.com/detail/faflkoombjlhkgieldilpijjnblgabnn?hl=en&authuser=0). On install, you will be prompted to authenticate
-    with your personal Dendrite account.
+  <Step title="Run Command">
+    First, run the following command in the terminal `dendrite auth --url <url>` where url is the website you want your agent to be authenticated against. For example `dendrite auth --url mail.google.com`. This will open up a browser at that url.
   </Step>
-  <Step title="Save Auth Session">
-    Go to any website where you're currently authenticated. Click on the
+  <Step title="Login and Save Auth Session ">
+    In the newly opened browser login into the service. When you are done go back to the terminal where you ran the command and press enter to save the seession.
     extension icon and press **Save authentication session**
   </Step>
   <Step title="Authenticate in Script">
@@ -26,15 +25,6 @@ Our Chrome extension, **Dendrite Vault**, enables you to securely share your web
   </Step>
 </Steps>
 
-## Install and Activate Extension
-
-Download the Dendrite Vault [here](https://chromewebstore.google.com/detail/faflkoombjlhkgieldilpijjnblgabnn?hl=en&authuser=0).
-
-You'll be prompted to log in to your Dendrite account.
-
-Once you've logged in, simply use the extension by pressing the icon in the top right corner of your browser.
-
-![Extension Dashboard](/images/auth-use-plugin.png)
 
 ## Example: Authenticating on Instagram
 
@@ -44,8 +34,7 @@ To log in to instagram with your agent your need to:
   <Step title="Log in to Instagram in your Local Browser">
   </Step>
   <Step title="Save your Authentication Session">
-    Open the Dendrite Vault extension and save your session on Instagram in your browser.
-    ![Instagram Dendrite Vault Examples](/images/instagram-example.png)    
+    Use the Dendrite CLI to save an authenticated session with Dendrite. Run the following command `dendrite auth --url instagram.` and login with your credentials.
   </Step>
   <Step title="Use with Dendrite">
     Initiate your Dendrite browser with an authenticated session.
@@ -88,4 +77,3 @@ print("First post description: ", desc)
 >
   Use a remote browser to run web automations in the cloud
 </Card>
-```

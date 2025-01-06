@@ -89,7 +89,7 @@ In this example, we're asking the agent if there are any unread emails in the in
 from dendrite import Dendrite
 
 # Initiate Dendrite instance
-browser = Dendrite(auth=["mail.google.com"])
+browser = Dendrite(auth="mail.google.com")
 
 # Navigate and wait for loading
 browser.goto("https://mail.google.com/", expected_page="Email inbox")

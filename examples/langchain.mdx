@@ -59,11 +59,6 @@ from langchain_community.utilities.dalle_image_generator import DallEAPIWrapper
 from langgraph.prebuilt import create_react_agent
 ```
 
-We'll also create a `.env` file for our Dendrite API key, which is used by default by the `Dendrite` browser.
-
-```text .env
-DENDRITE_API_KEY=sk...
-```
 
 ## Instagram Tooling
 
@@ -83,7 +78,6 @@ class InstagramTools:
 
 In the code above, we initiate the Dendrite browser with an authenticated session on instagram.com. Read more about authentication [here](/concepts/authentication).
 
-The `Dendrite` class uses our environment variable `DENDRITE_API_KEY` by default.
 
 ### Reading and Sending DMs
 

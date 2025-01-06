@@ -3,16 +3,6 @@ title: "Quickstart"
 description: "Create your first web action"
 ---
 
-## Get your API keys
-
-First, let's get a Dendrite API key from the [dashboard](https://dendrite.systems/app).
-
-You can use the keys in your code or have them in a `.env` file like this:
-
-```
-DENDRITE_API_KEY=
-```
-
 
 ## Installation
 
@@ -29,20 +19,25 @@ With poetry:
 poetry add dendrite && poetry run dendrite install 
 ```
 
+
 ## Hello world
 
-For our first Dendrite script, let's start the `Dendrite` browser, go to google.com and enter "hello world" into the search field:
+For our first Dendrite script, let's start the `Dendrite` browser, go to google.com and enter "hello world" into the search field.
+
+We also need to specify the API keys to the LLM providers which default to using Anthropic:
+
+```bash
+ANTHROPIC_API_KEY=...
+```
+
 
 ```python main.py
 import asyncio
 from dendrite import Dendrite
 
-# Get your Dendrite API key from dendrite.systems
-DENDRITE_API_KEY = "..."
-
 def hello_world():
   # Initate the Dendrite browser
-  browser = Dendrite(dendrite_api_key=DENDRITE_API_KEY)
+  browser = Dendrite()
 
   # Navigate with the `goto` method
   browser.goto("https://google.com")
@@ -52,12 +47,6 @@ def hello_world():
 
 hello_world()
 ```
-
-<Note>
-  **Pro tip:** If you have a variable in you .env file named DENDRITE_API_KEY,
-  you don't have to provide it when initiating the Dendrite class.
-</Note>
-
 ## Simple Examples and Concepts
 
 <CardGroup>

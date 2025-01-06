@@ -73,7 +73,7 @@ async def extract_info(browser, url):
 # Main function (asynchronous)
 async def main():
   # Initiate async Dendrite browser
-  browser = AsyncDendrite(dendrite_api_key=DENDRITE_API_KEY)
+  browser = AsyncDendrite()
 
   # Go to YC and search for AI agent companies
   await browser.goto("https://ycombinator.com/companies")
